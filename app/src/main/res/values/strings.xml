@@ -5,4 +5,5 @@
     <string name="my_tasks">My Tasks</string>
     <string name="todo">TODO</string>
     <string name="all_tasks">All Tasks</string>
+    <string name="task_title">task title</string>
 </resources>
