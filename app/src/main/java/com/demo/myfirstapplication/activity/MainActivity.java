@@ -3,6 +3,7 @@ package com.demo.myfirstapplication.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +22,18 @@ public class MainActivity extends AppCompatActivity {
              @Override
              public void onClick(View view) {
                  System.out.println("Add Task Button Clicked");
+                 Intent goToNewTaskFormIntent = new Intent(MainActivity.this, AddNewTaskActivity.class);
+                 startActivity(goToNewTaskFormIntent);
              }
          });
+        Button allTasksButton = (Button) findViewById(R.id.allTasksButton);
+    allTasksButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent goToAllTasksFormIntent = new Intent(MainActivity.this, AllTasksActivity.class);
+            startActivity(goToAllTasksFormIntent);
+        }
+    });
     }
 
 }
