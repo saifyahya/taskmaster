@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My First Application</string>
+    <string name="task_master">Task Master</string>
+    <string name="add_new_task">Add new Task</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="todo">TODO</string>
+    <string name="all_tasks">All Tasks</string>
+</resources>
