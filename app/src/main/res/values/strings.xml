@@ -6,4 +6,6 @@
     <string name="todo">TODO</string>
     <string name="all_tasks">All Tasks</string>
     <string name="task_title">task title</string>
+    <string name="task_title_detailPage">Do English assignment</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer malesuada nibh sit amet massa fermentum, eget consequat sapien malesuada.</string>
 </resources>

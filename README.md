@@ -19,3 +19,6 @@ Task master mobile application with three pages:
 - back button that back to home page.
 
 ## daily change log
+- Lab27
+1. Add Task Details page with two text views: task title and task description.
+2. Add Users Settings page with: edit text for the username and a save button.

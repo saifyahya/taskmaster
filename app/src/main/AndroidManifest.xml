@@ -13,6 +13,12 @@
         android:theme="@style/Theme.MyFirstApplication"
         tools:targetApi="31">
         <activity
+            android:name=".activity.UserSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.TaskDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AllTasksActivity"
             android:exported="false" />
         <activity
