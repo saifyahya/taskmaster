@@ -14,7 +14,7 @@
         android:layout_height="62dp"
         android:layout_marginBottom="36dp"
         android:autoText="false"
-        android:background="#00BCD4"
+        android:background="#1f6f78"
         android:fontFamily="casual"
         android:text="@string/task_master"
         android:textAlignment="center"
@@ -25,17 +25,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />
 
     <Button
         android:id="@+id/allTasksButton"
-        android:layout_width="175dp"
-        android:layout_height="71dp"
-        android:background="#00BCD4"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/custom_button"
         android:fontFamily="sans-serif-medium"
         android:shadowColor="#FFFFFF"
         android:text="@string/all_tasks"
-        android:textColor="@color/black"
+        android:textColor="#FFFFFF"
         android:textColorHighlight="@color/black"
         android:textColorLink="@color/black"
         android:textSize="20sp"
@@ -49,12 +50,15 @@
 
     <Button
         android:id="@+id/addTaskButton"
-        android:layout_width="176dp"
-        android:layout_height="72dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
-        android:background="#00BCD4"
+        android:background="@drawable/custom_button"
+        android:paddingLeft="4px"
+        android:paddingRight="4px"
         android:text="@string/add_new_task"
         android:textAlignment="center"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,26 +66,12 @@
         app:layout_constraintVertical_bias="0.827"
         tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="175dp"
-        android:layout_height="175dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.567"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.616"
-        app:srcCompat="@drawable/to_do_list"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/usertasks"
-        android:layout_width="182dp"
+        android:layout_width="333dp"
         android:layout_height="54dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="300dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="50dp"
         android:fontFamily="casual"
         android:text="@string/my_tasks"
@@ -90,9 +80,10 @@
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.112"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.41" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -111,37 +102,62 @@
         app:srcCompat="@drawable/to_do_list"
         tools:ignore="MissingConstraints" />
 
+
     <Button
-        android:id="@+id/userProfile"
-        android:layout_width="wrap_content"
+        android:id="@+id/task1"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:text="My profile"
+        android:layout_marginTop="204dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/tasks_button"
+        android:fontFamily="sans-serif-black"
+        android:text="English Assignment"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
+        android:id="@+id/task2"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:text="English Assignment"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="163dp" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="264dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/tasks_button"
+        android:fontFamily="sans-serif-black"
         android:text="11:00am Meeting"
-        tools:layout_editor_absoluteX="36dp"
-        tools:layout_editor_absoluteY="211dp" />
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
+        android:id="@+id/task3"
+        android:layout_width="409dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="324dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/tasks_button"
+        android:fontFamily="sans-serif-black"
         android:text="Prepare Docs"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="259dp" />
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/userProfile"
+        android:layout_width="72dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="#FFFFFF"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_profile"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
