@@ -37,9 +37,9 @@
 
     <Button
         android:id="@+id/addtaskbutton2"
-        android:layout_width="127dp"
-        android:layout_height="55dp"
-        android:background="#00BCD4"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/custom_button"
         android:text="Add Task"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +55,7 @@
         android:layout_width="727dp"
         android:layout_height="62dp"
         android:autoText="false"
-        android:background="#00BCD4"
+        android:background="#1f6f78"
         android:fontFamily="casual"
         android:text="@string/task_master"
         android:textAlignment="center"
@@ -67,18 +67,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />
 
-    <Button
+    <ImageView
         android:id="@+id/backbutton"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
-        android:background="#00BCD4"
-        android:text="back"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="41dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.006"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.115"
-        tools:ignore="MissingConstraints" />
+        app:srcCompat="@drawable/ic_home" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

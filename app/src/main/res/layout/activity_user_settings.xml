@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/userSettingsActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.UserSettingsActivity">
-
 
     <TextView
         android:id="@+id/textView"
@@ -13,7 +13,7 @@
         android:layout_height="62dp"
         android:layout_marginBottom="36dp"
         android:autoText="false"
-        android:background="#00BCD4"
+        android:background="#1f6f78"
         android:fontFamily="casual"
         android:text="@string/task_master"
         android:textAlignment="center"
@@ -29,18 +29,32 @@
         android:id="@+id/editTextUsername"
         android:layout_width="379dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="184dp"
         android:hint="Enter your username"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="237dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/buttonSaveUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="184dp"
+        android:layout_marginTop="112dp"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextUsername" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
+
+    <ImageView
+        android:id="@+id/backbutton"
+        android:layout_width="41dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_home"
+        android:contentDescription="BACK_HOME" />
 </androidx.constraintlayout.widget.ConstraintLayout>
