@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My First Application</string>
+    <string name="app_name">Task Master</string>
     <string name="task_master">Task Master</string>
     <string name="add_new_task">Add new Task</string>
     <string name="my_tasks">My Tasks</string>
@@ -8,4 +8,6 @@
     <string name="task_title">task title</string>
     <string name="task_title_detailPage">Do English assignment</string>
     <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer malesuada nibh sit amet massa fermentum, eget consequat sapien malesuada.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Blank Task</string>
 </resources>
