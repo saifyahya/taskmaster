@@ -8,142 +8,24 @@
     android:textAlignment="center"
     tools:context=".activity.MainActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="727dp"
-        android:layout_height="62dp"
-        android:layout_marginBottom="36dp"
-        android:autoText="false"
-        android:background="#1f6f78"
-        android:fontFamily="casual"
-        android:text="@string/task_master"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/usertasks"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
 
-    <Button
-        android:id="@+id/allTasksButton"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:background="@drawable/custom_button"
-        android:fontFamily="sans-serif-medium"
-        android:shadowColor="#FFFFFF"
-        android:text="@string/all_tasks"
-        android:textColor="#FFFFFF"
-        android:textColorHighlight="@color/black"
-        android:textColorLink="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.932"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.825"
-        app:rippleColor="#FFFFFF" />
-
-    <Button
-        android:id="@+id/addTaskButton"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/custom_button"
-        android:paddingLeft="4px"
-        android:paddingRight="4px"
-        android:text="@string/add_new_task"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.827"
-        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/usertasks"
         android:layout_width="333dp"
         android:layout_height="54dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="132dp"
         android:fontFamily="casual"
         android:text="@string/my_tasks"
         android:textAlignment="center"
         android:textSize="34sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.41" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="383dp"
-        android:layout_height="350dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toTopOf="@+id/addTaskButton"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/to_do_list"
-        tools:ignore="MissingConstraints" />
-
-
-    <Button
-        android:id="@+id/task1"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="204dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/tasks_button"
-        android:fontFamily="sans-serif-black"
-        android:text="English Assignment"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/task2"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="264dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/tasks_button"
-        android:fontFamily="sans-serif-black"
-        android:text="11:00am Meeting"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/task3"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="324dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/tasks_button"
-        android:fontFamily="sans-serif-black"
-        android:text="Prepare Docs"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -159,5 +41,66 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_profile"
         tools:ignore="MissingConstraints" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasksRV"
+        android:layout_width="403dp"
+        android:layout_height="301dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usertasks"
+        app:layout_constraintVertical_bias="0.277"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/allTasksButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/custom_button"
+            android:fontFamily="sans-serif-medium"
+            android:shadowColor="#FFFFFF"
+            android:text="@string/all_tasks"
+            android:textColor="#FFFFFF"
+            android:textColorHighlight="@color/black"
+            android:textColorLink="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:rippleColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/addTaskButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/custom_button"
+            android:paddingLeft="4px"
+            android:paddingRight="4px"
+            android:text="@string/add_new_task"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/allTasksButton"
+            tools:ignore="MissingConstraints" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

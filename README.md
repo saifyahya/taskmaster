@@ -1,6 +1,6 @@
 ## TaskMaster
 
-![homepage](./screenshots/home_taskmaster.png)
+![homepage](./screenshots/homePage._taskmasterpng.png)
 ![addTask](./screenshots/addtask.png)
 ![allTasks](./screenshots/alltaks.png)
 ![taskDetails](./screenshots/taskdteails.png)
@@ -8,7 +8,7 @@
 
 ## description
 Task master mobile application with 5 pages:
-1. home page with two buttons and list of tasks with the username:
+1. home page with two buttons and list of tasks (Recycler View) with the username:
 - Add new Task Button
 - All Tasks Button
 2. AddNewTask page:
@@ -27,4 +27,9 @@ Task master mobile application with 5 pages:
 ## daily change log
 - Lab27
 1. Add Task Details page with two text views: task title and task description. Task title is passed from intent in the main when the task button clicked.
-2. Add Users Settings page with: edit text for the username and a save button. The username is passed using Shared Preferences to the home page.
+2. Add Users Settings page with: edit text for the username and a save button. The username is passed using Shared Preferences to the home page. 
+
+- Lab28
+1. Add a  RecyclerView for displaying Task title, the tasks are hardcoded.
+2. Add a  fragment for holding each Task title inside the textview, and reuse them for each task in the list.
+3. Create a Task class with attributes: title, body and state. The state is enum of type TaskState, and can be one of: “new”, “assigned”, “in progress”, or “complete”

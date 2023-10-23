@@ -1,0 +1,13 @@
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#1F6F78"
+    android:fontFamily="casual"
+    android:minHeight="?attr/actionBarSize"
+    android:textAlignment="center"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:title="my custom tool bar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:titleTextColor="@color/white" />
