@@ -87,7 +87,7 @@
             android:id="@+id/addTaskButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="30dp"
             android:background="@drawable/custom_button"
             android:paddingLeft="4px"
             android:paddingRight="4px"

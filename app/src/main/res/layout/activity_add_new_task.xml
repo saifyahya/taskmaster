@@ -2,17 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addNewTaskActicity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.AddNewTaskActivity">
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/taskTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="@string/task_title"
         android:inputType="text"
-        android:text="@string/task_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.398"
@@ -22,21 +23,21 @@
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/taskDescriptionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="120dp"
         android:ems="10"
+        android:hint="task description"
         android:inputType="text"
-        android:text="task description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.377"
+        app:layout_constraintVertical_bias="0.32"
         tools:ignore="MissingConstraints" />
 
     <Button
-        android:id="@+id/addtaskbutton2"
+        android:id="@+id/saveToDBButton"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="@drawable/custom_button"
@@ -44,10 +45,10 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.539"
+        app:layout_constraintVertical_bias="0.665"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -67,6 +68,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />
 
+
     <ImageView
         android:id="@+id/backbutton"
         android:layout_width="41dp"
@@ -76,5 +78,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_home" />
+
+    <Button
+        android:id="@+id/startDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="292dp"
+        android:text="End date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.248"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
