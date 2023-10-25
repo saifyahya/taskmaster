@@ -2,30 +2,85 @@ package com.demo.myfirstapplication.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.demo.myfirstapplication.R;
+import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
+import com.demo.myfirstapplication.activity.database.TaskDatabase;
+import com.demo.myfirstapplication.activity.enums.TaskState;
+import com.demo.myfirstapplication.activity.models.Task;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
 
 public class AddNewTaskActivity extends AppCompatActivity {
-
+TaskDatabase taskDatabase;
+    Date selectedDate ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
-        Button addTask = findViewById(R.id.addtaskbutton2);
+        /*database connection*/
+        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
+
+        Button startDateButton = (Button) findViewById(R.id.startDateButton);
+        startDateButton.setOnClickListener(view1 ->{
+            openDialog();
+        } );
+
+        Button addTask = (Button) findViewById(R.id.saveToDBButton);
         addTask.setOnClickListener(view -> {
-            Toast.makeText(AddNewTaskActivity.this,"Task added",Toast.LENGTH_LONG).show();
+//            Snackbar.make(findViewById(R.id.addNewTaskActicity),"Task Saved",Snackbar.LENGTH_SHORT).show();
+//            EditText taskTitleEditText = (EditText) findViewById(R.id.taskTitleText);
+//            EditText taskDescriptionEditText = (EditText) findViewById(R.id.taskDescriptionText);
+//            String title = taskTitleEditText.getText().toString();
+//            String body = taskDescriptionEditText.getText().toString();
+//          Task newTask = new Task(title,body, TaskState.NEW,  selectedDate);
+//            taskDatabase.taskDAO().insertTask(newTask);
+            saveTaskToDatabase();
         });
+
         ImageView back = findViewById(R.id.backbutton);
         back.setOnClickListener(view ->  {
             Intent gobackFormIntent = new Intent(AddNewTaskActivity.this, MainActivity.class);
             startActivity(gobackFormIntent);
         });
+    }
 
+    private void openDialog(){
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+                // Convert the Calendar instance to a Date object
+                 selectedDate = calendar.getTime();
+            }
+        }, currentYear, currentMonth, currentDay);
+dialog.show();
+    }
+    private void saveTaskToDatabase(){
+        EditText taskTitleEditText = (EditText) findViewById(R.id.taskTitleText);
+        EditText taskDescriptionEditText = (EditText) findViewById(R.id.taskDescriptionText);
+        String title = taskTitleEditText.getText().toString();
+        String body = taskDescriptionEditText.getText().toString();
+        Task newTask = new Task(title,body, TaskState.NEW,  selectedDate);
+        taskDatabase.taskDAO().insertTask(newTask);
+        Snackbar.make(findViewById(R.id.addNewTaskActicity),"Task Saved",Snackbar.LENGTH_SHORT).show();
     }
 }

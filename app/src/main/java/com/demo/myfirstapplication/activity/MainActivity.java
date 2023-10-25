@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,21 +21,33 @@ import android.widget.TextView;
 
 import com.demo.myfirstapplication.R;
 import com.demo.myfirstapplication.activity.adapter.TasksRecyclerViewAdapter;
+import com.demo.myfirstapplication.activity.database.DatabaseConverter;
+import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
+import com.demo.myfirstapplication.activity.database.TaskDatabase;
 import com.demo.myfirstapplication.activity.enums.TaskState;
 import com.demo.myfirstapplication.activity.models.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
     public static final String TASK_TAG="taskName";
-
+//    public static final String DATABASE_TAG="taskDatabase";
+    TaskDatabase taskDatabase;
+    List<Task> tasks;
+    TasksRecyclerViewAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+                    /*Room Database*/
+        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
+        tasks=taskDatabase.taskDAO().findAll();
+
+                /*for toolbar*/
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,6 +82,24 @@ setupRecyclerView();
         //SharedPreferences sp = getApplicationContext().getSharedPreferences("MyUserPrefs", Context.MODE_PRIVATE);
         String name = sp.getString(UserSettingsActivity.USERNAME_TAG, "no name");
         userTasks.setText(name.isEmpty() ? "tasks" : name + "'s tasks");
+
+
+        // filter tasks based on user settings
+
+        String taskFilter = sp.getString("filterState","");
+        if(!taskFilter.isEmpty()){
+            List<Task> allTasks=taskDatabase.taskDAO().findAll();
+            List<Task> filteredTasks=allTasks.stream().filter(t->t.getState().getTASK_TEXT().equals(taskFilter)).collect(Collectors.toList());
+            tasks.clear();
+            tasks.addAll(filteredTasks);
+            adapter.notifyDataSetChanged();
+        }
+        else{
+            // retrieving list of tasks from room database
+            tasks.clear();
+            tasks.addAll(taskDatabase.taskDAO().findAll());
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void setupRecyclerView(){
@@ -76,24 +107,18 @@ setupRecyclerView();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRV.setLayoutManager(layoutManager);
+//        List<Task> taskList = new ArrayList<>();
+//        taskList.add(new Task("English Assignment","Loerm", TaskState.NEW));
+//        taskList.add(new Task("Meeting","Loerm", TaskState.ASSIGNED));
+//        taskList.add(new Task("Quiz","Loerm", TaskState.IN_PROGRESS));
+//        taskList.add(new Task("Sending Email","Loerm", TaskState.COMPLETE));
+//        taskList.add(new Task(" Lab","Loerm", TaskState.ASSIGNED));
+//        taskList.add(new Task("Code Challenge","Loerm", TaskState.NEW));
+//
+//        taskList.add(new Task("English Assignment","Loerm", TaskState.NEW));
+//        taskList.add(new Task("Arabic Assignment","Loerm", TaskState.ASSIGNED));
 
-
-        List<Task> taskList = new ArrayList<>();
-        taskList.add(new Task("English Assignment","Loerm", TaskState.New));
-        taskList.add(new Task("Meeting","Loerm", TaskState.Assigned));
-        taskList.add(new Task("Quiz","Loerm", TaskState.InProgress));
-        taskList.add(new Task("Sending Email","Loerm", TaskState.Complete));
-        taskList.add(new Task(" Lab","Loerm", TaskState.Assigned));
-        taskList.add(new Task("Code Challenge","Loerm", TaskState.New));
-
-        taskList.add(new Task("English Assignment","Loerm", TaskState.New));
-        taskList.add(new Task("Arabic Assignment","Loerm", TaskState.Assigned));
-        taskList.add(new Task("France Assignment","Loerm", TaskState.InProgress));
-        taskList.add(new Task("Turkey Assignment","Loerm", TaskState.Complete));
-        taskList.add(new Task("Dutch Assignment","Loerm", TaskState.Assigned));
-        taskList.add(new Task("Spain Assignment","Loerm", TaskState.New));
-
-        TasksRecyclerViewAdapter adapter = new TasksRecyclerViewAdapter(taskList,this);
+         adapter = new TasksRecyclerViewAdapter(tasks,this);
         tasksRV.setAdapter(adapter);
 
     }
