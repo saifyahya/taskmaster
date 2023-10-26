@@ -86,7 +86,6 @@ setupRecyclerView();
 
         // filter tasks based on user settings
         String taskFilter = sp.getString("filterState","");
-        taskFilter="";
         if(!taskFilter.isEmpty()){
             tasks.clear();
             tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));

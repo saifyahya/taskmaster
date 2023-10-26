@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.demo.myfirstapplication.R;
@@ -27,12 +29,18 @@ import java.util.Date;
 public class AddNewTaskActivity extends AppCompatActivity {
 TaskDatabase taskDatabase;
     Date selectedDate ;
+    Spinner taskStateSpinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
         /*database connection*/
         taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
+
+         taskStateSpinner = findViewById(R.id.spinner2);
+        taskStateSpinner.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item,
+                TaskState.values()));
 
         Button startDateButton = (Button) findViewById(R.id.startDateButton);
         startDateButton.setOnClickListener(view1 ->{
@@ -79,7 +87,8 @@ dialog.show();
         EditText taskDescriptionEditText = (EditText) findViewById(R.id.taskDescriptionText);
         String title = taskTitleEditText.getText().toString();
         String body = taskDescriptionEditText.getText().toString();
-        Task newTask = new Task(title,body, TaskState.NEW,  selectedDate);
+        TaskState selectedTaskState = TaskState.fromString(taskStateSpinner.getSelectedItem().toString());
+        Task newTask = new Task(title,body, selectedTaskState,  selectedDate);
         taskDatabase.taskDAO().insertTask(newTask);
         Snackbar.make(findViewById(R.id.addNewTaskActicity),"Task Saved",Snackbar.LENGTH_SHORT).show();
     }

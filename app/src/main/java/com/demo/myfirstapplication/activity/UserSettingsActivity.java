@@ -54,7 +54,7 @@ public static final String USERNAME_TAG="username";
         taskState.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 TaskState.values()));
-        Button changeState = findViewById(R.id.changeStateButton_user);
+        Button changeState = findViewById(R.id.changeStateButtonFilter);
         changeState.setOnClickListener(view -> {
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("filterState",taskState.getSelectedItem().toString());
