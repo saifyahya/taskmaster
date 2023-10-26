@@ -17,6 +17,8 @@ public interface TaskDAO {
     Task findById(long id);
     @Query("Select * From Task where title = :title" )
     Task findByTaskTitle(String title);
+    @Query("Select * From Task where state = :taskState" )
+   List<Task> findTaskByState(TaskState taskState);
     @Query("Select * From Task" )
     List<Task> findAll();
     @Query("Update Task set state = :taskState Where id=:taskId")
