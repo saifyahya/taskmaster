@@ -59,7 +59,7 @@ public static final String USERNAME_TAG="username";
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("filterState",taskState.getSelectedItem().toString());
             editor.apply();
-            Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Tasks filtered", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.userSettingsActivity), "Tasks filtered", Snackbar.LENGTH_SHORT).show();
         });
 
     }

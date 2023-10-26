@@ -85,13 +85,11 @@ setupRecyclerView();
 
 
         // filter tasks based on user settings
-
         String taskFilter = sp.getString("filterState","");
+        taskFilter="";
         if(!taskFilter.isEmpty()){
-            List<Task> allTasks=taskDatabase.taskDAO().findAll();
-            List<Task> filteredTasks=allTasks.stream().filter(t->t.getState().getTASK_TEXT().equals(taskFilter)).collect(Collectors.toList());
             tasks.clear();
-            tasks.addAll(filteredTasks);
+            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
             adapter.notifyDataSetChanged();
         }
         else{
@@ -107,17 +105,6 @@ setupRecyclerView();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRV.setLayoutManager(layoutManager);
-//        List<Task> taskList = new ArrayList<>();
-//        taskList.add(new Task("English Assignment","Loerm", TaskState.NEW));
-//        taskList.add(new Task("Meeting","Loerm", TaskState.ASSIGNED));
-//        taskList.add(new Task("Quiz","Loerm", TaskState.IN_PROGRESS));
-//        taskList.add(new Task("Sending Email","Loerm", TaskState.COMPLETE));
-//        taskList.add(new Task(" Lab","Loerm", TaskState.ASSIGNED));
-//        taskList.add(new Task("Code Challenge","Loerm", TaskState.NEW));
-//
-//        taskList.add(new Task("English Assignment","Loerm", TaskState.NEW));
-//        taskList.add(new Task("Arabic Assignment","Loerm", TaskState.ASSIGNED));
-
          adapter = new TasksRecyclerViewAdapter(tasks,this);
         tasksRV.setAdapter(adapter);
 
