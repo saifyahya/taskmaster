@@ -42,7 +42,6 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
         TextView taskFragment = (TextView) holder.itemView.findViewById(R.id.fragmentTextView);
         String taskName= taskList.get(position).getTitle();
-        String taskBody= taskList.get(position).getBody();
         String taskEndDate = dateToIso8601(taskList.get(position).getEndDate());
         String taskState =  taskList.get(position).getState().getTASK_TEXT();
         Long taskId = taskList.get(position).getId();
@@ -51,10 +50,6 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
         View taskViewHolder=holder.itemView;
         taskViewHolder.setOnClickListener(view -> {
             Intent goToTaskDetails = new Intent(callingActivity, TaskDetailsActivity.class);
-            goToTaskDetails.putExtra(TASK_TAG,taskName);
-            goToTaskDetails.putExtra("taskBody",taskBody);
-            goToTaskDetails.putExtra("taskBody",taskBody);
-            goToTaskDetails.putExtra("taskDate",taskEndDate);
             goToTaskDetails.putExtra("taskId",taskId);
 
             callingActivity.startActivity(goToTaskDetails);

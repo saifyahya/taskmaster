@@ -49,13 +49,6 @@ TaskDatabase taskDatabase;
 
         Button addTask = (Button) findViewById(R.id.saveToDBButton);
         addTask.setOnClickListener(view -> {
-//            Snackbar.make(findViewById(R.id.addNewTaskActicity),"Task Saved",Snackbar.LENGTH_SHORT).show();
-//            EditText taskTitleEditText = (EditText) findViewById(R.id.taskTitleText);
-//            EditText taskDescriptionEditText = (EditText) findViewById(R.id.taskDescriptionText);
-//            String title = taskTitleEditText.getText().toString();
-//            String body = taskDescriptionEditText.getText().toString();
-//          Task newTask = new Task(title,body, TaskState.NEW,  selectedDate);
-//            taskDatabase.taskDAO().insertTask(newTask);
             saveTaskToDatabase();
         });
 
@@ -88,6 +81,9 @@ dialog.show();
         String title = taskTitleEditText.getText().toString();
         String body = taskDescriptionEditText.getText().toString();
         TaskState selectedTaskState = TaskState.fromString(taskStateSpinner.getSelectedItem().toString());
+        if(selectedDate==null){
+            selectedDate=Calendar.getInstance().getTime();  //setting default end day today
+        }
         Task newTask = new Task(title,body, selectedTaskState,  selectedDate);
         taskDatabase.taskDAO().insertTask(newTask);
         Snackbar.make(findViewById(R.id.addNewTaskActicity),"Task Saved",Snackbar.LENGTH_SHORT).show();
