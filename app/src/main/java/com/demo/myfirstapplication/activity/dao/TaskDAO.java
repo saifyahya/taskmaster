@@ -23,4 +23,6 @@ public interface TaskDAO {
     List<Task> findAll();
     @Query("Update Task set state = :taskState Where id=:taskId")
     void updateTaskState(TaskState taskState,long taskId);
+    @Query("Delete From Task where id = :id" )
+    void deleteById(long id);
 }

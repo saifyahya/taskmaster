@@ -117,6 +117,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.594" />
 
+    <TextView
+        android:id="@+id/stateView"
+        android:layout_width="325px"
+        android:layout_height="wrap_content"
+        android:background="#1f6f78"
+        android:fontFamily="casual"
+        android:padding="5px"
+        android:text="Change status"
+        android:textAlignment="center"
+        android:textColor="#F6F8F8"
+        android:textSize="16sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.696"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.595" />
+
     <ImageView
         android:id="@+id/backbutton"
         android:layout_width="41dp"
@@ -157,5 +176,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner"
         app:layout_constraintVertical_bias="0.155"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/deleteTask"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
+        android:paddingLeft="4px"
+        android:paddingRight="4px"
+        android:text="Remove task"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.159"
         tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

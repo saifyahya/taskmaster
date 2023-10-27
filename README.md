@@ -7,7 +7,8 @@
 ![profile](./screenshots/userSettings_new.png)
 
 ## description
-Task master mobile application with 5 pages:
+Task master mobile application pp provides a user-friendly interface for managing tasks, allowing users to create, view, edit, and delete tasks.
+
 1. home page with two buttons and list of tasks (Recycler View) with the username:
 - Add new Task Button
 - All Tasks Button
@@ -27,7 +28,8 @@ Task master mobile application with 5 pages:
 - task title based on the clicked task.
 - task description.
 - task due date.
-- can update task state.
+- update task state.
+- delete task.
 ## daily change log
 - Lab27
 1. Add Task Details page with two text views: task title and task description. Task title is passed from intent in the main when the task button clicked.
@@ -42,6 +44,6 @@ Task master mobile application with 5 pages:
 1. Set up Room, and modify Task class to be an Entity.
 2. Modify Add Task form to save the data entered in as a Task in local database.
 3. Refactor homepage RecyclerView to display all Task entities from database.
-4. User can update task details (state), and can filter tasks on home page.
+4. User can update task details (state),delete task and can filter tasks on home page.
 
 
