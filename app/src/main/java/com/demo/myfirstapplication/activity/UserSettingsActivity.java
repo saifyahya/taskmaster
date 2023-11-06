@@ -1,12 +1,14 @@
 package com.demo.myfirstapplication.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +32,9 @@ public static final String USERNAME_TAG="username";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_settings);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ImageView back = findViewById(R.id.backbutton);
         back.setOnClickListener(view ->  {
@@ -61,7 +66,11 @@ public static final String USERNAME_TAG="username";
             editor.apply();
             Snackbar.make(findViewById(R.id.userSettingsActivity), "Tasks filtered", Snackbar.LENGTH_SHORT).show();
         });
-
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_meneu,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
 }

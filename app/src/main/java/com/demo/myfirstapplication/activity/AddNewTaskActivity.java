@@ -1,19 +1,19 @@
 package com.demo.myfirstapplication.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+
+import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.demo.myfirstapplication.R;
 import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
@@ -22,30 +22,33 @@ import com.demo.myfirstapplication.activity.enums.TaskState;
 import com.demo.myfirstapplication.activity.models.Task;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 
 public class AddNewTaskActivity extends AppCompatActivity {
-TaskDatabase taskDatabase;
-    Date selectedDate ;
+    TaskDatabase taskDatabase;
+    Date selectedDate;
     Spinner taskStateSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
         /*database connection*/
-        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
+        taskDatabase = DatabaseSingleton.getInstance(getApplicationContext());
 
-         taskStateSpinner = findViewById(R.id.spinner2);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        taskStateSpinner = findViewById(R.id.spinner2);
         taskStateSpinner.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 TaskState.values()));
 
         Button startDateButton = (Button) findViewById(R.id.startDateButton);
-        startDateButton.setOnClickListener(view1 ->{
+        startDateButton.setOnClickListener(view1 -> {
             openDialog();
-        } );
+        });
 
         Button addTask = (Button) findViewById(R.id.saveToDBButton);
         addTask.setOnClickListener(view -> {
@@ -53,13 +56,13 @@ TaskDatabase taskDatabase;
         });
 
         ImageView back = findViewById(R.id.backbutton);
-        back.setOnClickListener(view ->  {
+        back.setOnClickListener(view -> {
             Intent gobackFormIntent = new Intent(AddNewTaskActivity.this, MainActivity.class);
             startActivity(gobackFormIntent);
         });
     }
 
-    private void openDialog(){
+    private void openDialog() {
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
         int currentMonth = calendar.get(Calendar.MONTH);
@@ -70,22 +73,28 @@ TaskDatabase taskDatabase;
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
                 // Convert the Calendar instance to a Date object
-                 selectedDate = calendar.getTime();
+                selectedDate = calendar.getTime();
             }
         }, currentYear, currentMonth, currentDay);
-dialog.show();
+        dialog.show();
     }
-    private void saveTaskToDatabase(){
+
+    private void saveTaskToDatabase() {
         EditText taskTitleEditText = (EditText) findViewById(R.id.taskTitleText);
         EditText taskDescriptionEditText = (EditText) findViewById(R.id.taskDescriptionText);
         String title = taskTitleEditText.getText().toString();
         String body = taskDescriptionEditText.getText().toString();
         TaskState selectedTaskState = TaskState.fromString(taskStateSpinner.getSelectedItem().toString());
-        if(selectedDate==null){
-            selectedDate=Calendar.getInstance().getTime();  //setting default end day today
+        if (selectedDate == null) {
+            selectedDate = Calendar.getInstance().getTime();  //setting default end day today
         }
-        Task newTask = new Task(title,body, selectedTaskState,  selectedDate);
+        Task newTask = new Task(title, body, selectedTaskState, selectedDate);
         taskDatabase.taskDAO().insertTask(newTask);
-        Snackbar.make(findViewById(R.id.addNewTaskActicity),"Task Saved",Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.addNewTaskActicity), "Task Saved", Snackbar.LENGTH_SHORT).show();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_meneu,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

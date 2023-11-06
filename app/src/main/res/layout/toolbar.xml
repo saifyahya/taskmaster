@@ -8,6 +8,6 @@
     android:minHeight="?attr/actionBarSize"
     android:textAlignment="center"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:title="my custom tool bar"
+    android:title="@string/task_master_toolbar"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:titleTextColor="@color/white" />

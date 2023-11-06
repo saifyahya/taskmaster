@@ -3,12 +3,12 @@ package com.demo.myfirstapplication.activity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,45 +30,52 @@ import org.junit.runner.RunWith;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class MainActivityTest2 {
 
     @Rule
     public ActivityScenarioRule<MainActivity> mActivityScenarioRule =
             new ActivityScenarioRule<>(MainActivity.class);
 
     @Test
-    public void mainActivityTest() {
-        ViewInteraction appCompatImageButton = onView(
-                allOf(withId(R.id.userProfile),
+    public void mainActivityTest2() {
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.addTaskButton), withText("Add new Task"),
                         childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatImageButton.perform(click());
-
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.editTextUsername),
-                        childAtPosition(
-                                allOf(withId(R.id.userSettingsActivity),
+                                allOf(withId(R.id.linearLayout),
                                         childAtPosition(
-                                                withId(android.R.id.content),
-                                                0)),
+                                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                                4)),
                                 1),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("saif"), closeSoftKeyboard());
+        appCompatButton.perform(click());
 
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.buttonSaveUsername), withText("Save"),
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.saveToDBButton), withText("Add Task"),
                         childAtPosition(
-                                allOf(withId(R.id.userSettingsActivity),
+                                allOf(withId(R.id.addNewTaskActicity),
                                         childAtPosition(
                                                 withId(android.R.id.content),
                                                 0)),
-                                2),
+                                3),
                         isDisplayed()));
-        appCompatButton.perform(click());
+        appCompatButton2.perform(click());
+
+        ViewInteraction appCompatImageView = onView(
+                allOf(withId(R.id.backbutton),
+                        childAtPosition(
+                                allOf(withId(R.id.addNewTaskActicity),
+                                        childAtPosition(
+                                                withId(android.R.id.content),
+                                                0)),
+                                4),
+                        isDisplayed()));
+        appCompatImageView.perform(click());
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.tasksRV),
+                        childAtPosition(
+                                withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                3)));
     }
 
     private static Matcher<View> childAtPosition(
