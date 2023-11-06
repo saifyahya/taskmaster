@@ -6,24 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.UserSettingsActivity">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="727dp"
-        android:layout_height="62dp"
-        android:layout_marginBottom="36dp"
-        android:autoText="false"
-        android:background="#1f6f78"
-        android:fontFamily="casual"
-        android:text="@string/task_master"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:layout_width="727dp"-->
+<!--        android:layout_height="62dp"-->
+<!--        android:layout_marginBottom="36dp"-->
+<!--        android:autoText="false"-->
+<!--        android:background="#1f6f78"-->
+<!--        android:fontFamily="casual"-->
+<!--        android:text="@string/task_master"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textSize="48sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />-->
 
     <EditText
         android:id="@+id/editTextUsername"

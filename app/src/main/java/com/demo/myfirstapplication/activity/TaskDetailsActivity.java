@@ -1,9 +1,11 @@
 package com.demo.myfirstapplication.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +33,10 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
         /*Database connection*/
         taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         /*Displaying Task Info*/
         Intent callingIntent = getIntent();
         if (callingIntent != null){
@@ -86,5 +92,10 @@ if(retrievedTaskId!=-1){
             textView.setText(textViewStr);
         else
             textView.setText("Not Specified");
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_meneu,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
