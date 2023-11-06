@@ -1,10 +1,10 @@
 ## TaskMaster
 
-![homepage](./screenshots/taskMaster_homeNew.png)
-![addTask](./screenshots/addNewTask_new.png)
-![allTasks](./screenshots/alltaks.png)
-![taskDetails](./screenshots/task_detailsNew.png)
-![profile](./screenshots/userSettings_new.png)
+![homepage](./screenshots/home.png)
+![addTask](./screenshots/addnewtask.png)
+![allTasks](./screenshots/alltasks.png)
+![taskDetails](./screenshots/taskdetails.png)
+![profile](./screenshots/userpage.png)
 
 ## description
 Task master mobile application pp provides a user-friendly interface for managing tasks, allowing users to create, view, edit, and delete tasks.
