@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.demo.myfirstapplication.R;
-import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
-import com.demo.myfirstapplication.activity.database.TaskDatabase;
+//import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
+//import com.demo.myfirstapplication.activity.database.TaskDatabase;
 import com.demo.myfirstapplication.activity.enums.TaskState;
 import com.demo.myfirstapplication.activity.models.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AddNewTaskActivity extends AppCompatActivity {
-    TaskDatabase taskDatabase;
+//    TaskDatabase taskDatabase;
     Date selectedDate;
     Spinner taskStateSpinner;
 
@@ -35,7 +35,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_task);
         /*database connection*/
-        taskDatabase = DatabaseSingleton.getInstance(getApplicationContext());
+//        taskDatabase = DatabaseSingleton.getInstance(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -89,7 +89,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
             selectedDate = Calendar.getInstance().getTime();  //setting default end day today
         }
         Task newTask = new Task(title, body, selectedTaskState, selectedDate);
-        taskDatabase.taskDAO().insertTask(newTask);
+//        taskDatabase.taskDAO().insertTask(newTask);
         Snackbar.make(findViewById(R.id.addNewTaskActicity), "Task Saved", Snackbar.LENGTH_SHORT).show();
     }
     @Override
