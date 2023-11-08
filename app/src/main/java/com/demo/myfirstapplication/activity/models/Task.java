@@ -1,15 +1,14 @@
 package com.demo.myfirstapplication.activity.models;
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+//import androidx.room.Entity;
+//import androidx.room.PrimaryKey;
 
 import com.demo.myfirstapplication.activity.enums.TaskState;
 
 import java.util.Date;
 
-@Entity
+
 public class Task {
-    @PrimaryKey(autoGenerate = true)
     private Long id;
     private String title;
     private String body;

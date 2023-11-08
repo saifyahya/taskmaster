@@ -46,4 +46,10 @@ Task master mobile application pp provides a user-friendly interface for managin
 3. Refactor homepage RecyclerView to display all Task entities from database.
 4. User can update task details (state),delete task and can filter tasks on home page.
 
+- Lab31
+1. Polish the application and ensure that every feature is added and its style is ready.
+
+- Lab32
+1. Remove Room dependencies and room connections from the application and ensure that its functionality works correctly.
+
 

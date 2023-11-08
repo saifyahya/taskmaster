@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
+//import androidx.room.Room;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,13 +21,14 @@ import android.widget.TextView;
 
 import com.demo.myfirstapplication.R;
 import com.demo.myfirstapplication.activity.adapter.TasksRecyclerViewAdapter;
-import com.demo.myfirstapplication.activity.database.DatabaseConverter;
-import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
-import com.demo.myfirstapplication.activity.database.TaskDatabase;
+//import com.demo.myfirstapplication.activity.database.DatabaseConverter;
+//import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
+//import com.demo.myfirstapplication.activity.database.TaskDatabase;
 import com.demo.myfirstapplication.activity.enums.TaskState;
 import com.demo.myfirstapplication.activity.models.Task;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
     public static final String TASK_TAG="taskName";
 //    public static final String DATABASE_TAG="taskDatabase";
-    TaskDatabase taskDatabase;
+//    TaskDatabase taskDatabase;
     List<Task> tasks;
     TasksRecyclerViewAdapter adapter;
     @Override
@@ -44,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
                     /*Room Database*/
-        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
-        tasks=taskDatabase.taskDAO().findAll();
+//        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
+//        tasks=taskDatabase.taskDAO().findAll();
 
                 /*for toolbar*/
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -87,15 +88,15 @@ setupRecyclerView();
         // filter tasks based on user settings
         String taskFilter = sp.getString("filterState","");
         if(!taskFilter.isEmpty()){
-            tasks.clear();
-            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
-            adapter.notifyDataSetChanged();
+//            tasks.clear();
+//            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
+//            adapter.notifyDataSetChanged();
         }
         else{
             // retrieving list of tasks from room database
-            tasks.clear();
-            tasks.addAll(taskDatabase.taskDAO().findAll());
-            adapter.notifyDataSetChanged();
+//            tasks.clear();
+//            tasks.addAll(taskDatabase.taskDAO().findAll());
+//            adapter.notifyDataSetChanged();
         }
     }
 
@@ -104,6 +105,9 @@ setupRecyclerView();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         tasksRV.setLayoutManager(layoutManager);
+
+        tasks = new ArrayList<>();
+        tasks.add(new Task("english homework","homework unit 4",TaskState.NEW,new Date()));
          adapter = new TasksRecyclerViewAdapter(tasks,this);
         tasksRV.setAdapter(adapter);
 
