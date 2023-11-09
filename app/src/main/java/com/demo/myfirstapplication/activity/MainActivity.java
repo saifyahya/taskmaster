@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -19,13 +20,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.Task;
 import com.demo.myfirstapplication.R;
 import com.demo.myfirstapplication.activity.adapter.TasksRecyclerViewAdapter;
 //import com.demo.myfirstapplication.activity.database.DatabaseConverter;
 //import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
 //import com.demo.myfirstapplication.activity.database.TaskDatabase;
 import com.demo.myfirstapplication.activity.enums.TaskState;
-import com.demo.myfirstapplication.activity.models.Task;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,7 +110,22 @@ setupRecyclerView();
         tasksRV.setLayoutManager(layoutManager);
 
         tasks = new ArrayList<>();
-        tasks.add(new Task("english homework","homework unit 4",TaskState.NEW,new Date()));
+//        tasks.add(new Task("english homework","homework unit 4",TaskState.NEW,new Date()));
+        Amplify.API.query(
+                ModelQuery.list(Task.class),
+                success ->
+                {
+                    Log.i("MainActivity", "Read Tasks successfully");
+                    tasks.clear();
+                    for (Task databaseTask : success.getData()){
+                        tasks.add(databaseTask);
+                    }
+                    runOnUiThread(() ->{
+                        adapter.notifyDataSetChanged();
+                    });
+                },
+                failure -> Log.i("MainActivity", "Did not read Tasks successfully")
+        );
          adapter = new TasksRecyclerViewAdapter(tasks,this);
         tasksRV.setAdapter(adapter);
 
