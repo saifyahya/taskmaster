@@ -12,9 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.datastore.generated.model.Task;
 import com.demo.myfirstapplication.R;
 import com.demo.myfirstapplication.activity.TaskDetailsActivity;
-import com.demo.myfirstapplication.activity.models.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,9 +42,9 @@ public class TasksRecyclerViewAdapter extends RecyclerView.Adapter<TasksRecycler
     public void onBindViewHolder(@NonNull TaskHolder holder, int position) {
         TextView taskFragment = (TextView) holder.itemView.findViewById(R.id.fragmentTextView);
         String taskName= taskList.get(position).getTitle();
-        String taskEndDate = dateToIso8601(taskList.get(position).getEndDate());
-        String taskState =  taskList.get(position).getState().getTASK_TEXT();
-        Long taskId = taskList.get(position).getId();
+        String taskEndDate = dateToIso8601(taskList.get(position).getEndDate().toDate());
+        String taskState =  taskList.get(position).getState().toString();
+        String taskId = taskList.get(position).getId();
         taskFragment.setText(position+". "+taskName+"\n" +"Due date: "+taskEndDate+ " Status: "+taskState);
 
         View taskViewHolder=holder.itemView;

@@ -51,5 +51,6 @@ Task master mobile application pp provides a user-friendly interface for managin
 
 - Lab32
 1. Remove Room dependencies and room connections from the application and ensure that its functionality works correctly.
+2. Saving tasks in Dynamo db and showing (retrieve) them in the main activity.
 
 
