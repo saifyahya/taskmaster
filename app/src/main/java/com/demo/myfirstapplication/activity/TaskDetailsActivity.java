@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,20 +13,24 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.amplifyframework.api.graphql.model.ModelMutation;
+import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.datastore.generated.model.Task;
+import com.amplifyframework.datastore.generated.model.TaskStateEnum;
 import com.demo.myfirstapplication.R;
 //import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
 //import com.demo.myfirstapplication.activity.database.TaskDatabase;
-import com.demo.myfirstapplication.activity.enums.TaskState;
-import com.demo.myfirstapplication.activity.models.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 public class TaskDetailsActivity extends AppCompatActivity {
+    Task retrievedTask;
     TextView taskTitle;
     TextView taskBody;
     TextView taskEndDate;
 //    TaskDatabase taskDatabase;
     TextView taskState;
-
+public static final String TAG ="retrievedTASK";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +45,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
         /*Displaying Task Info*/
         Intent callingIntent = getIntent();
         if (callingIntent != null){
-            long retrievedTaskId = callingIntent.getLongExtra("taskId",-1);
-if(retrievedTaskId!=-1){
+            String retrievedTaskId = callingIntent.getStringExtra("taskId");
+if(retrievedTaskId!=null){
 //            Task retrievedTask = taskDatabase.taskDAO().findById(retrievedTaskId);
 //            if(retrievedTask!=null){
 //                taskState = findViewById(R.id.stateView);
@@ -55,28 +60,73 @@ if(retrievedTaskId!=-1){
 //                taskEndDate = findViewById(R.id.taskDateView);
 //                settingTaskInfo(taskEndDate,retrievedTask.getEndDate().toString());
 //            }
+    Amplify.API.query(
+            ModelQuery.get(Task.class, retrievedTaskId),
+            response -> {
+                 retrievedTask = response.getData();
+                if (retrievedTask != null) {
+                    updateUIWithTaskDetails(retrievedTask);
+                } else {
+                    // Task not found
+                    // Handle the case where the task with the given ID is not found
+                }
+            },
+            error -> {
+                // Handle query error
+                Log.e("GetTaskError", "Error fetching task by ID", error);
+            }
+    );
         }}
 
         /*updating Task State Part*/
         Spinner taskState = findViewById(R.id.spinner);
         taskState.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
-                TaskState.values()));
+                TaskStateEnum.values()));
         Button changeState = findViewById(R.id.changeStateButton);
         changeState.setOnClickListener(view -> {
-           long retrievedTaskId = callingIntent.getLongExtra("taskId",-1);
-            TaskState newTaskState = TaskState.fromString(taskState.getSelectedItem().toString());
-            if(retrievedTaskId!=-1) {
+           String retrievedTaskId = callingIntent.getStringExtra("taskId");
+            Log.d(TAG, "Retrieved Task ID: " + retrievedTaskId);
+
+            TaskStateEnum newTaskState =(TaskStateEnum) taskState.getSelectedItem();
+            if(retrievedTaskId!=null) {
 //                taskDatabase.taskDAO().updateTaskState(newTaskState, retrievedTaskId);
+                Task updatedTask = Task.builder()
+                        .title(retrievedTask.getTitle())
+                        .state(newTaskState)
+                        .build();
+
+                Amplify.API.mutate(
+                        ModelMutation.update(updatedTask),
+                        response -> {
+                            // Handle successful state update
+                            System.out.println("Task state updated successfully");
+                        },
+                        error -> {
+                            // Handle state update error
+                            System.err.println("Error updating task state: " + error);
+                        }
+                );
                 Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task state updated", Snackbar.LENGTH_SHORT).show();
             }
         });
 
         Button deleteTask = findViewById(R.id.deleteTask);
         deleteTask.setOnClickListener(view -> {
-            long retrievedTaskId = callingIntent.getLongExtra("taskId",-1);
-            if(retrievedTaskId!=-1){
+            String retrievedTaskId = callingIntent.getStringExtra("taskId");
+            if(retrievedTaskId!=null){
 //                taskDatabase.taskDAO().deleteById(retrievedTaskId);
+                Amplify.API.mutate(
+                        ModelMutation.delete(retrievedTask),
+                        response -> {
+                            // Handle successful deletion
+                            System.out.println("Task deleted successfully");
+                        },
+                        error -> {
+                            // Handle deletion error
+                            System.err.println("Error deleting task: " + error);
+                        }
+                );
                 Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task Removed", Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -87,6 +137,23 @@ if(retrievedTaskId!=-1){
             startActivity(gobackFormIntent);
         });
     }
+
+    private void updateUIWithTaskDetails(Task retrievedTask) {
+        runOnUiThread(() ->{
+            taskState = findViewById(R.id.stateView);
+            settingTaskInfo(taskState,retrievedTask.getState().toString());
+            taskTitle = findViewById(R.id.textViewTitle);
+            settingTaskInfo(taskTitle,retrievedTask.getTitle());
+
+            taskBody = findViewById(R.id.taskDetailsDescription);
+            settingTaskInfo(taskBody,retrievedTask.getBody());
+
+            taskEndDate = findViewById(R.id.taskDateView);
+            settingTaskInfo(taskEndDate,retrievedTask.getEndDate().format().split("T")[0]);
+        });
+
+    }
+
     private void settingTaskInfo(TextView textView , String textViewStr){
         if ((textViewStr != null))
             textView.setText(textViewStr);

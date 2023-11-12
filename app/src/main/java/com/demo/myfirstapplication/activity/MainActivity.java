@@ -94,12 +94,42 @@ setupRecyclerView();
 //            tasks.clear();
 //            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
 //            adapter.notifyDataSetChanged();
+            Amplify.API.query(
+                    ModelQuery.list(Task.class),
+                    success ->
+                    {
+                        Log.i("MainActivity", "Read Tasks successfully");
+                        tasks.clear();
+                        for (Task databaseTask : success.getData()){
+                            tasks.add(databaseTask);
+                        }
+                        runOnUiThread(() ->{
+                            adapter.notifyDataSetChanged();
+                        });
+                    },
+                    failure -> Log.i("MainActivity", "Did not read Tasks successfully")
+            );
         }
         else{
             // retrieving list of tasks from room database
 //            tasks.clear();
 //            tasks.addAll(taskDatabase.taskDAO().findAll());
 //            adapter.notifyDataSetChanged();
+            Amplify.API.query(
+                    ModelQuery.list(Task.class),
+                    success ->
+                    {
+                        Log.i("MainActivity", "Read Tasks successfully");
+                        tasks.clear();
+                        for (Task databaseTask : success.getData()){
+                            tasks.add(databaseTask);
+                        }
+                        runOnUiThread(() ->{
+                            adapter.notifyDataSetChanged();
+                        });
+                    },
+                    failure -> Log.i("MainActivity", "Did not read Tasks successfully")
+            );
         }
     }
 
@@ -111,21 +141,21 @@ setupRecyclerView();
 
         tasks = new ArrayList<>();
 //        tasks.add(new Task("english homework","homework unit 4",TaskState.NEW,new Date()));
-        Amplify.API.query(
-                ModelQuery.list(Task.class),
-                success ->
-                {
-                    Log.i("MainActivity", "Read Tasks successfully");
-                    tasks.clear();
-                    for (Task databaseTask : success.getData()){
-                        tasks.add(databaseTask);
-                    }
-                    runOnUiThread(() ->{
-                        adapter.notifyDataSetChanged();
-                    });
-                },
-                failure -> Log.i("MainActivity", "Did not read Tasks successfully")
-        );
+//        Amplify.API.query(
+//                ModelQuery.list(Task.class),
+//                success ->
+//                {
+//                    Log.i("MainActivity", "Read Tasks successfully");
+//                    tasks.clear();
+//                    for (Task databaseTask : success.getData()){
+//                        tasks.add(databaseTask);
+//                    }
+//                    runOnUiThread(() ->{
+//                        adapter.notifyDataSetChanged();
+//                    });
+//                },
+//                failure -> Log.i("MainActivity", "Did not read Tasks successfully")
+//        );
          adapter = new TasksRecyclerViewAdapter(tasks,this);
         tasksRV.setAdapter(adapter);
 
