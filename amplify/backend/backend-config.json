@@ -7,7 +7,7 @@
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "apiKeyConfig": {
-              "apiKeyExpirationDate": "2024-01-08T09:54:54.390Z",
+              "apiKeyExpirationDate": "2024-01-12T04:50:31.075Z",
               "apiKeyExpirationDays": 60,
               "description": "key for models"
             },

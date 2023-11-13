@@ -1,9 +1,8 @@
 package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.temporal.Temporal;
-import com.amplifyframework.core.model.ModelIdentifier;
+import com.amplifyframework.core.model.annotations.BelongsTo;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
 
@@ -22,20 +21,23 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 
 /** This is an auto generated class representing the Task type in your schema. */
 @SuppressWarnings("all")
-@ModelConfig(pluralName = "Tasks", type = Model.Type.USER, version = 1, authRules = {
+@ModelConfig(pluralName = "Tasks", authRules = {
   @AuthRule(allow = AuthStrategy.PUBLIC, operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
+@Index(name = "byTeam", fields = {"teamId","title"})
 public final class Task implements Model {
   public static final QueryField ID = field("Task", "id");
   public static final QueryField TITLE = field("Task", "title");
   public static final QueryField BODY = field("Task", "body");
   public static final QueryField END_DATE = field("Task", "endDate");
   public static final QueryField STATE = field("Task", "state");
+  public static final QueryField TEAM_PERSON = field("Task", "teamId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
   private final @ModelField(targetType="String") String body;
   private final @ModelField(targetType="AWSDateTime") Temporal.DateTime endDate;
   private final @ModelField(targetType="TaskStateEnum") TaskStateEnum state;
+  private final @ModelField(targetType="Team") @BelongsTo(targetName = "teamId", type = Team.class) Team teamPerson;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   /** @deprecated This API is internal to Amplify and should not be used. */
@@ -64,6 +66,10 @@ public final class Task implements Model {
       return state;
   }
   
+  public Team getTeamPerson() {
+      return teamPerson;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -72,12 +78,13 @@ public final class Task implements Model {
       return updatedAt;
   }
   
-  private Task(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state) {
+  private Task(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, Team teamPerson) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.endDate = endDate;
     this.state = state;
+    this.teamPerson = teamPerson;
   }
   
   @Override
@@ -93,6 +100,7 @@ public final class Task implements Model {
               ObjectsCompat.equals(getBody(), task.getBody()) &&
               ObjectsCompat.equals(getEndDate(), task.getEndDate()) &&
               ObjectsCompat.equals(getState(), task.getState()) &&
+              ObjectsCompat.equals(getTeamPerson(), task.getTeamPerson()) &&
               ObjectsCompat.equals(getCreatedAt(), task.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), task.getUpdatedAt());
       }
@@ -106,6 +114,7 @@ public final class Task implements Model {
       .append(getBody())
       .append(getEndDate())
       .append(getState())
+      .append(getTeamPerson())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -121,6 +130,7 @@ public final class Task implements Model {
       .append("body=" + String.valueOf(getBody()) + ", ")
       .append("endDate=" + String.valueOf(getEndDate()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
+      .append("teamPerson=" + String.valueOf(getTeamPerson()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -145,6 +155,7 @@ public final class Task implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -154,7 +165,8 @@ public final class Task implements Model {
       title,
       body,
       endDate,
-      state);
+      state,
+      teamPerson);
   }
   public interface TitleStep {
     BuildStep title(String title);
@@ -167,6 +179,7 @@ public final class Task implements Model {
     BuildStep body(String body);
     BuildStep endDate(Temporal.DateTime endDate);
     BuildStep state(TaskStateEnum state);
+    BuildStep teamPerson(Team teamPerson);
   }
   
 
@@ -176,16 +189,18 @@ public final class Task implements Model {
     private String body;
     private Temporal.DateTime endDate;
     private TaskStateEnum state;
+    private Team teamPerson;
     public Builder() {
       
     }
     
-    private Builder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state) {
+    private Builder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, Team teamPerson) {
       this.id = id;
       this.title = title;
       this.body = body;
       this.endDate = endDate;
       this.state = state;
+      this.teamPerson = teamPerson;
     }
     
     @Override
@@ -197,7 +212,8 @@ public final class Task implements Model {
           title,
           body,
           endDate,
-          state);
+          state,
+          teamPerson);
     }
     
     @Override
@@ -225,6 +241,12 @@ public final class Task implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep teamPerson(Team teamPerson) {
+        this.teamPerson = teamPerson;
+        return this;
+    }
+    
     /**
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -237,8 +259,8 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state) {
-      super(id, title, body, endDate, state);
+    private CopyOfBuilder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, Team teamPerson) {
+      super(id, title, body, endDate, state, teamPerson);
       Objects.requireNonNull(title);
     }
     
@@ -261,14 +283,12 @@ public final class Task implements Model {
      public CopyOfBuilder state(TaskStateEnum state) {
       return (CopyOfBuilder) super.state(state);
     }
-  }
-  
-
-  public static class TaskIdentifier extends ModelIdentifier<Task> {
-    private static final long serialVersionUID = 1L;
-    public TaskIdentifier(String id) {
-      super(id);
+    
+    @Override
+     public CopyOfBuilder teamPerson(Team teamPerson) {
+      return (CopyOfBuilder) super.teamPerson(teamPerson);
     }
   }
+
   
 }

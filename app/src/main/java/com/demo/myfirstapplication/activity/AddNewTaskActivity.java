@@ -17,10 +17,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.amplifyframework.api.graphql.model.ModelMutation;
+import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.TaskStateEnum;
+import com.amplifyframework.datastore.generated.model.Team;
 import com.demo.myfirstapplication.R;
 //import com.demo.myfirstapplication.activity.database.DatabaseSingleton;
 //import com.demo.myfirstapplication.activity.database.TaskDatabase;
@@ -29,14 +31,20 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class AddNewTaskActivity extends AppCompatActivity {
 //    TaskDatabase taskDatabase;
     Date selectedDate;
     Spinner taskStateSpinner;
+    Spinner teamSpinner;
     public static final String TAG = "AddTaskActivity";
+    CompletableFuture<List<Team>> teamFuture = new CompletableFuture<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +55,13 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        teamFuture = new CompletableFuture<>();
 
         taskStateSpinner = findViewById(R.id.spinner2);
         taskStateSpinner.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item,
                 TaskStateEnum.values()));
+        setUpSpinners();
 
         Button startDateButton = (Button) findViewById(R.id.startDateButton);
         startDateButton.setOnClickListener(view1 -> {
@@ -97,12 +107,25 @@ public class AddNewTaskActivity extends AppCompatActivity {
             selectedDate = Calendar.getInstance().getTime();  //setting default end day today
         }
         String currentDateString = com.amazonaws.util.DateUtils.formatISO8601Date(selectedDate);
+        String selectedTeamString = teamSpinner.getSelectedItem().toString();
+
+        List<Team> teams=null;
+        try {
+            teams=teamFuture.get();
+        }catch (InterruptedException ie){
+            Log.e(TAG, " InterruptedException while getting teams");
+        }catch (ExecutionException ee){
+            Log.e(TAG," ExecutionException while getting teams");
+        }
+
+        Team selectedTeam = teams.stream().filter(c -> c.getName().equals(selectedTeamString)).findAny().orElseThrow(RuntimeException::new);
 //        Task newTask = new Task(title, body, selectedTaskState, selectedDate);
         Task newTask = Task.builder()
                 .title(title)
                 .body(body)
                 .endDate( new Temporal.DateTime(selectedDate,0 ))
                 .state(selectedTaskState)
+                .teamPerson(selectedTeam)
                 .build();
 //        taskDatabase.taskDAO().insertTask(newTask);
         Amplify.API.mutate(
@@ -117,4 +140,36 @@ public class AddNewTaskActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar_meneu,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    private void setUpSpinners(){
+        teamSpinner = (Spinner) findViewById(R.id.spinner3);
+
+        Amplify.API.query(
+                ModelQuery.list(Team.class),
+                success ->
+                {
+                    Log.i(TAG, "Read Team Successfully");
+                    ArrayList<String> teamNames = new ArrayList<>();
+                    ArrayList<Team> teams = new ArrayList<>();
+                    for(Team team: success.getData()){
+                        teams.add(team);
+                        teamNames.add(team.getName());
+                    }
+                    teamFuture.complete(teams);
+
+                    runOnUiThread(() ->
+                    {
+                        teamSpinner.setAdapter(new ArrayAdapter<>(
+                                this,
+                                (android.R.layout.simple_spinner_item),
+                                teamNames
+                        ));
+                    });
+                },
+                failure-> {
+                    teamFuture.complete(null);
+                    Log.i(TAG, "Did not read teams successfully");
+                }
+        );
+}
 }

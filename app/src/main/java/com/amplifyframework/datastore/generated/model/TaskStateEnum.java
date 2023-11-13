@@ -6,6 +6,4 @@ public enum TaskStateEnum {
   ASSIGNED,
   IN_PROGRESS,
   COMPLETE
-
-
 }
