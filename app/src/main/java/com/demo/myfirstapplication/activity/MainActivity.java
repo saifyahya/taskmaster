@@ -20,9 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Task;
+import com.amplifyframework.datastore.generated.model.Team;
 import com.demo.myfirstapplication.R;
 import com.demo.myfirstapplication.activity.adapter.TasksRecyclerViewAdapter;
 //import com.demo.myfirstapplication.activity.database.DatabaseConverter;
@@ -74,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
             Intent goToAllTasksFormIntent = new Intent(MainActivity.this, AllTasksActivity.class);
             startActivity(goToAllTasksFormIntent);
         });
-
+//createTeam();
 setupRecyclerView();
+
     }
 
     @Override
@@ -88,9 +91,17 @@ setupRecyclerView();
         userTasks.setText(name.isEmpty() ? "tasks" : name + "'s tasks");
 
 
+
         // filter tasks based on user settings
+        TextView userTeam;
+        userTeam = findViewById(R.id.team_home);
+        String teamName = sp.getString("filterTeam", "no name");
+        userTeam.setText(teamName.isEmpty() ? "team" : teamName);
+
         String taskFilter = sp.getString("filterState","");
         if(!taskFilter.isEmpty()){
+            Log.i("MainActivity", "inside not empty filter");
+
 //            tasks.clear();
 //            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
 //            adapter.notifyDataSetChanged();
@@ -98,10 +109,13 @@ setupRecyclerView();
                     ModelQuery.list(Task.class),
                     success ->
                     {
-                        Log.i("MainActivity", "Read Tasks successfully");
+                        Log.i("MainActivity", "Read Tasks successfully"+taskFilter);
                         tasks.clear();
                         for (Task databaseTask : success.getData()){
-                            tasks.add(databaseTask);
+                            if(databaseTask.getState().toString().equals(taskFilter.toUpperCase()) && databaseTask.getTeamPerson().getName().equals(teamName) ) {
+                                Log.i("MainActivity", "team associated:"+databaseTask.getTeamPerson().getName()+"team filter:"+teamName);
+
+                            tasks.add(databaseTask);}
                         }
                         runOnUiThread(() ->{
                             adapter.notifyDataSetChanged();
@@ -115,6 +129,8 @@ setupRecyclerView();
 //            tasks.clear();
 //            tasks.addAll(taskDatabase.taskDAO().findAll());
 //            adapter.notifyDataSetChanged();
+            Log.i("MainActivity", "inside  empty filter");
+
             Amplify.API.query(
                     ModelQuery.list(Task.class),
                     success ->
@@ -165,6 +181,32 @@ setupRecyclerView();
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_meneu,menu);
         return super.onCreateOptionsMenu(menu);
+    }
+    public void createTeam(){
+        Team team1 = Team.builder()
+                .name("Developers")
+                .build();
+        Team team2 = Team.builder()
+                .name("Testing")
+                .build();
+        Team team3 = Team.builder()
+                .name("Managers")
+                .build();
+        Amplify.API.mutate(
+                ModelMutation.create(team1),
+                successResponse-> Log.i("Main Activity",  "create a team successfully"),
+                failureResponse-> Log.i("Main Activity", "create a team successfully")
+);
+        Amplify.API.mutate(
+                ModelMutation.create(team2),
+                successResponse-> Log.i("Main Activity",  "create a team successfully"),
+                failureResponse-> Log.i("Main Activity", "create a team successfully")
+        );
+        Amplify.API.mutate(
+                ModelMutation.create(team3),
+                successResponse-> Log.i("Main Activity",  "create a team successfully"),
+                failureResponse-> Log.i("Main Activity", "create a team successfully")
+        );
     }
 
 }

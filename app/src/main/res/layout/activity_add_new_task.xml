@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.AddNewTaskActivity">
+
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
@@ -39,6 +40,24 @@
         app:layout_constraintVertical_bias="0.32"
         tools:ignore="MissingConstraints" />
 
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView"-->
+    <!--        android:layout_width="727dp"-->
+    <!--        android:layout_height="62dp"-->
+    <!--        android:autoText="false"-->
+    <!--        android:background="#1f6f78"-->
+    <!--        android:fontFamily="casual"-->
+    <!--        android:text="@string/task_master"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+    <!--        android:textSize="48sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />-->
+
+
     <Button
         android:id="@+id/saveToDBButton"
         android:layout_width="150dp"
@@ -48,29 +67,11 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.436"
+        app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.704"
+        app:layout_constraintVertical_bias="0.851"
         tools:ignore="MissingConstraints" />
-
-<!--    <TextView-->
-<!--        android:id="@+id/textView"-->
-<!--        android:layout_width="727dp"-->
-<!--        android:layout_height="62dp"-->
-<!--        android:autoText="false"-->
-<!--        android:background="#1f6f78"-->
-<!--        android:fontFamily="casual"-->
-<!--        android:text="@string/task_master"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:textSize="48sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />-->
-
 
     <ImageView
         android:id="@+id/backbutton"
@@ -94,7 +95,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <TextView
         android:id="@+id/textView4"
         android:layout_width="115dp"
@@ -106,7 +106,20 @@
         app:layout_constraintHorizontal_bias="0.023"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.952" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="115dp"
+        android:layout_height="33dp"
+        android:text="Select State"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/spinner3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.054"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner2"
+        app:layout_constraintVertical_bias="0.795" />
 
     <Spinner
         android:id="@+id/spinner2"
@@ -114,8 +127,19 @@
         android:layout_height="40dp"
         app:layout_constraintBottom_toTopOf="@+id/saveToDBButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.092"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/startDateButton"
-        app:layout_constraintVertical_bias="0.65" />
+        app:layout_constraintVertical_bias="0.375" />
+
+    <Spinner
+        android:id="@+id/spinner3"
+        android:layout_width="335dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="172dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.092"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

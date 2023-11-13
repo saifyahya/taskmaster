@@ -73,6 +73,19 @@
         app:layout_constraintVertical_bias="0.691"
         tools:ignore="MissingConstraints" />
 
+    <Spinner
+        android:id="@+id/spinner_user2"
+        android:layout_width="370dp"
+        android:layout_height="48dp"
+        android:backgroundTint="#009688"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_user"
+        app:layout_constraintVertical_bias="0.208"
+        tools:ignore="MissingConstraints" />
+
     <Button
         android:id="@+id/changeStateButtonFilter"
         android:layout_width="150dp"
@@ -89,7 +102,7 @@
         app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_user"
-        app:layout_constraintVertical_bias="0.155"
+        app:layout_constraintVertical_bias="0.595"
         tools:ignore="MissingConstraints" />
 
     <TextView

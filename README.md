@@ -8,6 +8,7 @@
 
 ## description
 Task master mobile application pp provides a user-friendly interface for managing tasks, allowing users to create, view, edit, and delete tasks.
+Tasks are created and associated with teams, user can filter tasks based on his team and task state.
 
 1. home page with two buttons and list of tasks (Recycler View) with the username:
 - Add new Task Button
@@ -53,4 +54,9 @@ Task master mobile application pp provides a user-friendly interface for managin
 1. Remove Room dependencies and room connections from the application and ensure that its functionality works correctly.
 2. Saving tasks in Dynamo db and showing (retrieve) them in the main activity.
 
+- Lab33
+1. Create Team model and associate it with the Task (one team `has many` tasks,  task `belongsto` team).
+2. Choose the team associated when creating a task, and filter the tasks on the main activity based on team.
 
+
+ 
