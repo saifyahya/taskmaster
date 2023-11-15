@@ -58,5 +58,6 @@ Tasks are created and associated with teams, user can filter tasks based on his 
 1. Create Team model and associate it with the Task (one team `has many` tasks,  task `belongsto` team).
 2. Choose the team associated when creating a task, and filter the tasks on the main activity based on team.
 
-
- 
+- Lab34
+1. Adding new activity: Edit Task Activity which let the user edits the task info and save the updated info.
+2. User can delete the task.

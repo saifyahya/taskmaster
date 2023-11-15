@@ -79,35 +79,41 @@ if(retrievedTaskId!=null){
         }}
 
         /*updating Task State Part*/
-        Spinner taskState = findViewById(R.id.spinner);
-        taskState.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
-                TaskStateEnum.values()));
+//        Spinner taskState = findViewById(R.id.spinner);
+//        taskState.setAdapter(new ArrayAdapter<>(this,
+//                android.R.layout.simple_spinner_item,
+//                TaskStateEnum.values()));
         Button changeState = findViewById(R.id.changeStateButton);
         changeState.setOnClickListener(view -> {
            String retrievedTaskId = callingIntent.getStringExtra("taskId");
             Log.d(TAG, "Retrieved Task ID: " + retrievedTaskId);
 
-            TaskStateEnum newTaskState =(TaskStateEnum) taskState.getSelectedItem();
+           // TaskStateEnum newTaskState =(TaskStateEnum) taskState.getSelectedItem();
             if(retrievedTaskId!=null) {
+                Intent goToTaskDetails = new Intent(TaskDetailsActivity.this, EditTaskActivity.class);
+                goToTaskDetails.putExtra("taskId",retrievedTaskId);
+                startActivity(goToTaskDetails);
 //                taskDatabase.taskDAO().updateTaskState(newTaskState, retrievedTaskId);
-                Task updatedTask = Task.builder()
-                        .title(retrievedTask.getTitle())
-                        .state(newTaskState)
-                        .build();
-
-                Amplify.API.mutate(
-                        ModelMutation.update(updatedTask),
-                        response -> {
-                            // Handle successful state update
-                            System.out.println("Task state updated successfully");
-                        },
-                        error -> {
-                            // Handle state update error
-                            System.err.println("Error updating task state: " + error);
-                        }
-                );
-                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task state updated", Snackbar.LENGTH_SHORT).show();
+//                Task updatedTask = Task.builder()
+//                        .title(retrievedTask.getTitle())
+//                        .teamPerson(retrievedTask.getTeamPerson())
+//                        .body(retrievedTask.getBody())
+//                        .endDate(retrievedTask.getEndDate())
+//                        .state(newTaskState)
+//                        .build();
+//
+//                Amplify.API.mutate(
+//                        ModelMutation.update(updatedTask),
+//                        response -> {
+//                            // Handle successful state update
+//                            System.out.println("Task state updated successfully");
+//                        },
+//                        error -> {
+//                            // Handle state update error
+//                            System.err.println("Error updating task state: " + error);
+//                        }
+//                );
+//                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task state updated", Snackbar.LENGTH_SHORT).show();
             }
         });
 
