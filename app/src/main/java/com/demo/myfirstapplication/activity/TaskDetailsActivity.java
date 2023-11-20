@@ -27,8 +27,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
     Task retrievedTask;
     TextView taskTitle;
     TextView taskBody;
+    TextView taskTeam;
     TextView taskEndDate;
-//    TaskDatabase taskDatabase;
     TextView taskState;
 public static final String TAG ="retrievedTASK";
     @Override
@@ -36,8 +36,6 @@ public static final String TAG ="retrievedTASK";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
 
-        /*Database connection*/
-//        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -47,19 +45,7 @@ public static final String TAG ="retrievedTASK";
         if (callingIntent != null){
             String retrievedTaskId = callingIntent.getStringExtra("taskId");
 if(retrievedTaskId!=null){
-//            Task retrievedTask = taskDatabase.taskDAO().findById(retrievedTaskId);
-//            if(retrievedTask!=null){
-//                taskState = findViewById(R.id.stateView);
-//                settingTaskInfo(taskState,retrievedTask.getState().toString());
-//                taskTitle = findViewById(R.id.textViewTitle);
-//                settingTaskInfo(taskTitle,retrievedTask.getTitle());
-//
-//                taskBody = findViewById(R.id.taskDetailsDescription);
-//                settingTaskInfo(taskBody,retrievedTask.getBody());
-//
-//                taskEndDate = findViewById(R.id.taskDateView);
-//                settingTaskInfo(taskEndDate,retrievedTask.getEndDate().toString());
-//            }
+
     Amplify.API.query(
             ModelQuery.get(Task.class, retrievedTaskId),
             response -> {
@@ -78,42 +64,19 @@ if(retrievedTaskId!=null){
     );
         }}
 
+
         /*updating Task State Part*/
-//        Spinner taskState = findViewById(R.id.spinner);
-//        taskState.setAdapter(new ArrayAdapter<>(this,
-//                android.R.layout.simple_spinner_item,
-//                TaskStateEnum.values()));
+
         Button changeState = findViewById(R.id.changeStateButton);
         changeState.setOnClickListener(view -> {
            String retrievedTaskId = callingIntent.getStringExtra("taskId");
             Log.d(TAG, "Retrieved Task ID: " + retrievedTaskId);
 
-           // TaskStateEnum newTaskState =(TaskStateEnum) taskState.getSelectedItem();
             if(retrievedTaskId!=null) {
                 Intent goToTaskDetails = new Intent(TaskDetailsActivity.this, EditTaskActivity.class);
                 goToTaskDetails.putExtra("taskId",retrievedTaskId);
                 startActivity(goToTaskDetails);
-//                taskDatabase.taskDAO().updateTaskState(newTaskState, retrievedTaskId);
-//                Task updatedTask = Task.builder()
-//                        .title(retrievedTask.getTitle())
-//                        .teamPerson(retrievedTask.getTeamPerson())
-//                        .body(retrievedTask.getBody())
-//                        .endDate(retrievedTask.getEndDate())
-//                        .state(newTaskState)
-//                        .build();
-//
-//                Amplify.API.mutate(
-//                        ModelMutation.update(updatedTask),
-//                        response -> {
-//                            // Handle successful state update
-//                            System.out.println("Task state updated successfully");
-//                        },
-//                        error -> {
-//                            // Handle state update error
-//                            System.err.println("Error updating task state: " + error);
-//                        }
-//                );
-//                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task state updated", Snackbar.LENGTH_SHORT).show();
+
             }
         });
 
@@ -121,7 +84,6 @@ if(retrievedTaskId!=null){
         deleteTask.setOnClickListener(view -> {
             String retrievedTaskId = callingIntent.getStringExtra("taskId");
             if(retrievedTaskId!=null){
-//                taskDatabase.taskDAO().deleteById(retrievedTaskId);
                 Amplify.API.mutate(
                         ModelMutation.delete(retrievedTask),
                         response -> {
@@ -133,7 +95,9 @@ if(retrievedTaskId!=null){
                             System.err.println("Error deleting task: " + error);
                         }
                 );
-                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task Removed", Snackbar.LENGTH_SHORT).show();
+//                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task Removed", Snackbar.LENGTH_SHORT).show();
+                Intent gobackFormIntent = new Intent(TaskDetailsActivity.this, MainActivity.class);
+                startActivity(gobackFormIntent);
             }
         });
 
@@ -144,6 +108,8 @@ if(retrievedTaskId!=null){
         });
     }
 
+
+
     private void updateUIWithTaskDetails(Task retrievedTask) {
         runOnUiThread(() ->{
             taskState = findViewById(R.id.stateView);
@@ -153,6 +119,9 @@ if(retrievedTaskId!=null){
 
             taskBody = findViewById(R.id.taskDetailsDescription);
             settingTaskInfo(taskBody,retrievedTask.getBody());
+
+            taskTeam = findViewById(R.id.taskDetailsDescription2);
+            settingTaskInfo(taskTeam,retrievedTask.getTeamPerson().getName());
 
             taskEndDate = findViewById(R.id.taskDateView);
             settingTaskInfo(taskEndDate,retrievedTask.getEndDate().format().split("T")[0]);

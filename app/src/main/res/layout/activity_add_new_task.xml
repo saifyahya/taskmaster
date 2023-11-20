@@ -112,7 +112,7 @@
         android:id="@+id/textView"
         android:layout_width="115dp"
         android:layout_height="33dp"
-        android:text="Select State"
+        android:text="Select Team"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/spinner3"
         app:layout_constraintEnd_toEndOf="parent"
