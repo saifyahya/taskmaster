@@ -19,9 +19,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.auth.AuthUser;
+import com.amplifyframework.auth.AuthUserAttribute;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.Team;
@@ -39,6 +42,8 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sp;
+    public final String TAG = "Main Activity";
+
     public static final String TASK_TAG="taskName";
 //    public static final String DATABASE_TAG="taskDatabase";
 //    TaskDatabase taskDatabase;
@@ -78,12 +83,52 @@ public class MainActivity extends AppCompatActivity {
         });
 //createTeam();
 setupRecyclerView();
-
+setUpLoginAndLogoutButton();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        // auth part
+        AuthUser authUser = Amplify.Auth.getCurrentUser();
+        String username="";
+        if (authUser == null){
+            Button loginButton = (Button) findViewById(R.id.productListLoginButton);
+            loginButton.setVisibility(View.VISIBLE);
+            Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
+            logoutButton.setVisibility(View.INVISIBLE);
+        }else{
+            username = authUser.getUsername();
+            Log.i(TAG, "Username is: "+ username);
+            Button loginButton = (Button) findViewById(R.id.productListLoginButton);
+            loginButton.setVisibility(View.INVISIBLE);
+            Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
+            logoutButton.setVisibility(View.VISIBLE);
+            // show user email in the main activity
+            String username2 = username; // ugly way for lambda hack
+            Amplify.Auth.fetchUserAttributes(
+                    success ->
+                    {
+                        Log.i(TAG, "Fetch user attributes succeeded for username: "+username2);
+                        for (AuthUserAttribute userAttribute: success){
+                            if(userAttribute.getKey().getKeyString().equals("email")){
+                                String userEmail = userAttribute.getValue();
+                                runOnUiThread(() ->
+                                {
+                                    ((TextView)findViewById(R.id.userNicknameTextView)).setText(userEmail);
+                                });
+                            }
+                        }
+                    },
+                    failure ->
+                    {
+                        Log.i(TAG, "Fetch user attributes failed: "+failure.toString());
+                    }
+            );
+        }
+
+        ////////////////
         TextView userTasks;
         userTasks = findViewById(R.id.usertasks);
         //SharedPreferences sp = getApplicationContext().getSharedPreferences("MyUserPrefs", Context.MODE_PRIVATE);
@@ -208,5 +253,37 @@ setupRecyclerView();
                 failureResponse-> Log.i("Main Activity", "create a team successfully")
         );
     }
+    private void setUpLoginAndLogoutButton(){
+        Button loginButton = (Button) findViewById(R.id.productListLoginButton);
+        loginButton.setOnClickListener(v ->
+        {
+            Intent goToLogInIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(goToLogInIntent);
+        });
 
+        Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
+        logoutButton.setOnClickListener(v->
+        {
+            Amplify.Auth.signOut(
+                    () ->
+                    {
+                        Log.i(TAG,"Logout succeeded");
+                        runOnUiThread(() ->
+                        {
+                            ((TextView)findViewById(R.id.userNicknameTextView)).setText("");
+                        });
+                        Intent goToLogInIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(goToLogInIntent);
+                    },
+                    failure ->
+                    {
+                        Log.i(TAG, "Logout failed");
+                        runOnUiThread(() ->
+                        {
+                            Toast.makeText(MainActivity.this, "Log out failed", Toast.LENGTH_LONG);
+                        });
+                    }
+            );
+        });
+    }
 }
