@@ -49,8 +49,8 @@
 
     <TextView
         android:id="@+id/taskDetailsDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="249dp"
+        android:layout_height="69dp"
         android:layout_marginTop="68dp"
         android:background="#BFEBF1"
         android:padding="16dp"
@@ -58,6 +58,20 @@
         android:textColor="#131212"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
+
+    <TextView
+        android:id="@+id/taskDetailsDescription2"
+        android:layout_width="125dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="68dp"
+        android:background="#BFEBF1"
+        android:padding="16dp"
+        android:text="@string/lorem"
+        android:textColor="#131212"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.912"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
 
@@ -169,7 +183,7 @@
         android:background="@drawable/custom_button"
         android:paddingLeft="4px"
         android:paddingRight="4px"
-        android:text="Save Status"
+        android:text="Edit Task"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
