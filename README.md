@@ -61,3 +61,7 @@ Tasks are created and associated with teams, user can filter tasks based on his 
 - Lab34
 1. Adding new activity: Edit Task Activity which let the user edits the task info and save the updated info.
 2. User can delete the task.
+
+- Lab35
+Include *Cognito* authentication, so the user can signup with email and password then he need to verify the email, after this the user can login to the app and logout.
+1. Adding new 3 activities: Signup activity, VerifyAccount Activity and Login Activity.
