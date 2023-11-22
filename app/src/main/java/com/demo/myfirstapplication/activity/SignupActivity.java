@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amplifyframework.auth.AuthUserAttributeKey;
@@ -24,6 +25,12 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        ImageView back = findViewById(R.id.backbutton_signup);
+        back.setOnClickListener(view ->  {
+            Intent gobackFormIntent = new Intent(SignupActivity.this, MainActivity.class);
+            startActivity(gobackFormIntent);
+        });
 
         Button signupSubmitButton= (Button) findViewById(R.id.signupSubmitButton);
         signupSubmitButton.setOnClickListener(v ->

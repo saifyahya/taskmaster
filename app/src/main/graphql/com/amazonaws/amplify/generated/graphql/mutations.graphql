@@ -52,6 +52,7 @@ mutation CreateTask(
     body
     endDate
     state
+    image
     teamId
     teamPerson {
       id
@@ -76,6 +77,7 @@ mutation UpdateTask(
     body
     endDate
     state
+    image
     teamId
     teamPerson {
       id
@@ -100,6 +102,7 @@ mutation DeleteTask(
     body
     endDate
     state
+    image
     teamId
     teamPerson {
       id

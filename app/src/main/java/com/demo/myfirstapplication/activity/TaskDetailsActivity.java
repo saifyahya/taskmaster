@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +25,8 @@ import com.demo.myfirstapplication.R;
 //import com.demo.myfirstapplication.activity.database.TaskDatabase;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
+
 public class TaskDetailsActivity extends AppCompatActivity {
     Task retrievedTask;
     TextView taskTitle;
@@ -30,82 +34,19 @@ public class TaskDetailsActivity extends AppCompatActivity {
     TextView taskTeam;
     TextView taskEndDate;
     TextView taskState;
-public static final String TAG ="retrievedTASK";
+    private String s3ImageKey = "";
+
+    public static final String TAG ="retrievedTASK";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
 
+        init();
+        displayTask();
+        editTask();
+        deleteTask();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        /*Displaying Task Info*/
-        Intent callingIntent = getIntent();
-        if (callingIntent != null){
-            String retrievedTaskId = callingIntent.getStringExtra("taskId");
-if(retrievedTaskId!=null){
-
-    Amplify.API.query(
-            ModelQuery.get(Task.class, retrievedTaskId),
-            response -> {
-                 retrievedTask = response.getData();
-                if (retrievedTask != null) {
-                    updateUIWithTaskDetails(retrievedTask);
-                } else {
-                    // Task not found
-                    // Handle the case where the task with the given ID is not found
-                }
-            },
-            error -> {
-                // Handle query error
-                Log.e("GetTaskError", "Error fetching task by ID", error);
-            }
-    );
-        }}
-
-
-        /*updating Task State Part*/
-
-        Button changeState = findViewById(R.id.changeStateButton);
-        changeState.setOnClickListener(view -> {
-           String retrievedTaskId = callingIntent.getStringExtra("taskId");
-            Log.d(TAG, "Retrieved Task ID: " + retrievedTaskId);
-
-            if(retrievedTaskId!=null) {
-                Intent goToTaskDetails = new Intent(TaskDetailsActivity.this, EditTaskActivity.class);
-                goToTaskDetails.putExtra("taskId",retrievedTaskId);
-                startActivity(goToTaskDetails);
-
-            }
-        });
-
-        Button deleteTask = findViewById(R.id.deleteTask);
-        deleteTask.setOnClickListener(view -> {
-            String retrievedTaskId = callingIntent.getStringExtra("taskId");
-            if(retrievedTaskId!=null){
-                Amplify.API.mutate(
-                        ModelMutation.delete(retrievedTask),
-                        response -> {
-                            // Handle successful deletion
-                            System.out.println("Task deleted successfully");
-                        },
-                        error -> {
-                            // Handle deletion error
-                            System.err.println("Error deleting task: " + error);
-                        }
-                );
-//                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task Removed", Snackbar.LENGTH_SHORT).show();
-                Intent gobackFormIntent = new Intent(TaskDetailsActivity.this, MainActivity.class);
-                startActivity(gobackFormIntent);
-            }
-        });
-
-        ImageView back = findViewById(R.id.backbutton);
-        back.setOnClickListener(view ->  {
-            Intent gobackFormIntent = new Intent(TaskDetailsActivity.this, MainActivity.class);
-            startActivity(gobackFormIntent);
-        });
     }
 
 
@@ -140,4 +81,127 @@ if(retrievedTaskId!=null){
         getMenuInflater().inflate(R.menu.toolbar_meneu,menu);
         return super.onCreateOptionsMenu(menu);
     }
+
+    private void   init(){
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ImageView back = findViewById(R.id.backbutton);
+        back.setOnClickListener(view ->  {
+            Intent gobackFormIntent = new Intent(TaskDetailsActivity.this, MainActivity.class);
+            startActivity(gobackFormIntent);
+        });
+
+    }
+    private void displayTask(){
+        /*Displaying Task Info*/
+        Intent callingIntent = getIntent();
+        if (callingIntent != null){
+            String retrievedTaskId = callingIntent.getStringExtra("taskId");
+            if(retrievedTaskId!=null){
+
+                Amplify.API.query(
+                        ModelQuery.get(Task.class, retrievedTaskId),
+                        response -> {
+                            retrievedTask = response.getData(); // the result (retrieved task) is asynronous, it will not block the code exection ad then return retrieved task through a callback
+                            if (retrievedTask != null) {
+                                updateUIWithTaskDetails(retrievedTask);
+                                renderTaskImage();
+                            } else {
+                                // Task not found
+                                // Handle the case where the task with the given ID is not found
+                            }
+                        },
+                        error -> {
+                            // Handle query error
+                            Log.e("GetTaskError", "Error fetching task by ID", error);
+                        }
+                );
+
+
+            }
+        }
+
+
+    }
+    private void deleteTask(){
+        Button deleteTask = findViewById(R.id.deleteTask);
+        deleteTask.setOnClickListener(view -> {
+            Intent callingIntent = getIntent();
+            String retrievedTaskId = callingIntent.getStringExtra("taskId");
+            if(retrievedTaskId!=null){
+                Amplify.API.mutate(
+                        ModelMutation.delete(retrievedTask),
+                        response -> {
+                            // Handle successful deletion
+                            System.out.println("Task deleted successfully");
+                        },
+                        error -> {
+                            // Handle deletion error
+                            System.err.println("Error deleting task: " + error);
+                        }
+                );
+//                Snackbar.make(findViewById(R.id.TaskDetailsLayout), "Task Removed", Snackbar.LENGTH_SHORT).show();
+                Intent gobackFormIntent = new Intent(TaskDetailsActivity.this, MainActivity.class);
+                startActivity(gobackFormIntent);
+            }
+        });
+    }
+    private void editTask(){
+        /*updating Task State Part*/
+
+        Button changeState = findViewById(R.id.changeStateButton);
+        changeState.setOnClickListener(view -> {
+            Intent callingIntent = getIntent();
+            String retrievedTaskId = callingIntent.getStringExtra("taskId");
+            Log.d(TAG, "Retrieved Task ID: " + retrievedTaskId);
+
+            if(retrievedTaskId!=null) {
+                Intent goToTaskDetails = new Intent(TaskDetailsActivity.this, EditTaskActivity.class);
+                goToTaskDetails.putExtra("taskId",retrievedTaskId);
+                startActivity(goToTaskDetails);
+
+            }
+        });
+    }
+    private void renderTaskImage() {
+        // display task image
+        Log.d(TAG, "retrievedTaskinside " + retrievedTask);
+
+        s3ImageKey = retrievedTask.getImage();
+        if (s3ImageKey != null && !s3ImageKey.isEmpty()) {
+            Amplify.Storage.downloadFile(
+                    s3ImageKey,
+                    new File(getApplication().getFilesDir(), s3ImageKey),
+                    success -> {
+                        // Load a scaled-down version of the image
+                        int targetWidth = 400; // Adjust the target width as needed
+                        int targetHeight = 400; // Adjust the target height as needed
+
+                        // Options for image resizing
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeFile(success.getFile().getPath(), options);
+                        int imageWidth = options.outWidth;
+                        int imageHeight = options.outHeight;
+                        int scaleFactor = Math.min(imageWidth / targetWidth, imageHeight / targetHeight);
+
+                        options.inJustDecodeBounds = false;
+                        options.inSampleSize = scaleFactor;
+
+                        // Decode the scaled-down image
+                        Bitmap resizedBitmap = BitmapFactory.decodeFile(success.getFile().getPath(), options);
+
+                        // Set the resized bitmap to the ImageView
+                        ImageView productImageView = findViewById(R.id.taskImage_taskDetails);
+                        productImageView.setImageBitmap(resizedBitmap);
+                    },
+                    failure -> {
+                        Log.e(TAG, "Unable to get image from S3 for the product for S3 key: " + s3ImageKey + " for reason: " + failure.getMessage());
+                    }
+            );
+        }
+    }
+
 }

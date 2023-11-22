@@ -29,11 +29,31 @@
 <!--        app:layout_constraintTop_toTopOf="parent"-->
 <!--        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />-->
 
+    <!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="122dp"-->
+<!--        android:layout_height="41dp"-->
+<!--        android:background="#1f6f78"-->
+<!--        android:fontFamily="casual"-->
+<!--        android:paddingTop="10px"-->
+<!--        android:paddingRight="10px"-->
+<!--        android:text="My Task"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textColor="#F6F8F8"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold|italic"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.055"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.12" />-->
+
     <TextView
         android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="148dp"
+        android:layout_width="278dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="196dp"
         android:gravity="center"
         android:padding="16dp"
         android:text="@string/task_title_detailPage"
@@ -49,9 +69,9 @@
 
     <TextView
         android:id="@+id/taskDetailsDescription"
-        android:layout_width="249dp"
-        android:layout_height="69dp"
-        android:layout_marginTop="68dp"
+        android:layout_width="256dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="80dp"
         android:background="#BFEBF1"
         android:padding="16dp"
         android:text="@string/lorem"
@@ -63,37 +83,30 @@
 
     <TextView
         android:id="@+id/taskDetailsDescription2"
-        android:layout_width="125dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="68dp"
+        android:layout_width="127dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="80dp"
         android:background="#BFEBF1"
         android:padding="16dp"
         android:text="@string/lorem"
         android:textColor="#131212"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.912"
+        app:layout_constraintHorizontal_bias="0.944"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewTitle" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="122dp"
-        android:layout_height="41dp"
-        android:background="#1f6f78"
-        android:fontFamily="casual"
-        android:paddingTop="10px"
-        android:paddingRight="10px"
-        android:text="My Task"
-        android:textAlignment="center"
-        android:textColor="#F6F8F8"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/taskImage_taskDetails"
+        android:layout_width="133dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.12" />
+        app:layout_constraintVertical_bias="0.333"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/taskDateView"
@@ -110,10 +123,10 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.326" />
+        app:layout_constraintVertical_bias="0.408" />
 
     <TextView
         android:id="@+id/changeStateView"
@@ -129,10 +142,10 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.055"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.594" />
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsDescription"
+        app:layout_constraintVertical_bias="0.127" />
 
     <TextView
         android:id="@+id/stateView"
@@ -148,10 +161,10 @@
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.696"
+        app:layout_constraintHorizontal_bias="0.801"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.595" />
+        app:layout_constraintTop_toBottomOf="@+id/taskDetailsDescription2"
+        app:layout_constraintVertical_bias="0.141" />
 
     <ImageView
         android:id="@+id/backbutton"
@@ -170,10 +183,10 @@
         android:backgroundTint="#009688"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.292"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.691"
+        app:layout_constraintVertical_bias="0.733"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -192,7 +205,7 @@
         app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner"
-        app:layout_constraintVertical_bias="0.155"
+        app:layout_constraintVertical_bias="0.261"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -211,6 +224,6 @@
         app:layout_constraintHorizontal_bias="0.842"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner"
-        app:layout_constraintVertical_bias="0.159"
+        app:layout_constraintVertical_bias="0.261"
         tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

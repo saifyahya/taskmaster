@@ -3,6 +3,8 @@ package com.amplifyframework.datastore.generated.model;
 import com.amplifyframework.core.model.temporal.Temporal;
 import com.amplifyframework.core.model.annotations.BelongsTo;
 
+
+import java.util.List;
 import java.util.UUID;
 import java.util.Objects;
 
@@ -31,12 +33,14 @@ public final class Task implements Model {
   public static final QueryField BODY = field("Task", "body");
   public static final QueryField END_DATE = field("Task", "endDate");
   public static final QueryField STATE = field("Task", "state");
+  public static final QueryField IMAGE = field("Task", "image");
   public static final QueryField TEAM_PERSON = field("Task", "teamId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
   private final @ModelField(targetType="String") String body;
   private final @ModelField(targetType="AWSDateTime") Temporal.DateTime endDate;
   private final @ModelField(targetType="TaskStateEnum") TaskStateEnum state;
+  private final @ModelField(targetType="String") String image;
   private final @ModelField(targetType="Team") @BelongsTo(targetName = "teamId", type = Team.class) Team teamPerson;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
@@ -66,6 +70,10 @@ public final class Task implements Model {
       return state;
   }
   
+  public String getImage() {
+      return image;
+  }
+  
   public Team getTeamPerson() {
       return teamPerson;
   }
@@ -78,12 +86,13 @@ public final class Task implements Model {
       return updatedAt;
   }
   
-  private Task(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, Team teamPerson) {
+  private Task(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, Team teamPerson) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.endDate = endDate;
     this.state = state;
+    this.image = image;
     this.teamPerson = teamPerson;
   }
   
@@ -100,6 +109,7 @@ public final class Task implements Model {
               ObjectsCompat.equals(getBody(), task.getBody()) &&
               ObjectsCompat.equals(getEndDate(), task.getEndDate()) &&
               ObjectsCompat.equals(getState(), task.getState()) &&
+              ObjectsCompat.equals(getImage(), task.getImage()) &&
               ObjectsCompat.equals(getTeamPerson(), task.getTeamPerson()) &&
               ObjectsCompat.equals(getCreatedAt(), task.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), task.getUpdatedAt());
@@ -114,6 +124,7 @@ public final class Task implements Model {
       .append(getBody())
       .append(getEndDate())
       .append(getState())
+      .append(getImage())
       .append(getTeamPerson())
       .append(getCreatedAt())
       .append(getUpdatedAt())
@@ -130,6 +141,7 @@ public final class Task implements Model {
       .append("body=" + String.valueOf(getBody()) + ", ")
       .append("endDate=" + String.valueOf(getEndDate()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
+      .append("image=" + String.valueOf(getImage()) + ", ")
       .append("teamPerson=" + String.valueOf(getTeamPerson()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
@@ -156,6 +168,7 @@ public final class Task implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -166,6 +179,7 @@ public final class Task implements Model {
       body,
       endDate,
       state,
+      image,
       teamPerson);
   }
   public interface TitleStep {
@@ -179,6 +193,7 @@ public final class Task implements Model {
     BuildStep body(String body);
     BuildStep endDate(Temporal.DateTime endDate);
     BuildStep state(TaskStateEnum state);
+    BuildStep image(String image);
     BuildStep teamPerson(Team teamPerson);
   }
   
@@ -189,17 +204,19 @@ public final class Task implements Model {
     private String body;
     private Temporal.DateTime endDate;
     private TaskStateEnum state;
+    private String image;
     private Team teamPerson;
     public Builder() {
       
     }
     
-    private Builder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, Team teamPerson) {
+    private Builder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, Team teamPerson) {
       this.id = id;
       this.title = title;
       this.body = body;
       this.endDate = endDate;
       this.state = state;
+      this.image = image;
       this.teamPerson = teamPerson;
     }
     
@@ -213,6 +230,7 @@ public final class Task implements Model {
           body,
           endDate,
           state,
+          image,
           teamPerson);
     }
     
@@ -242,6 +260,12 @@ public final class Task implements Model {
     }
     
     @Override
+     public BuildStep image(String image) {
+        this.image = image;
+        return this;
+    }
+    
+    @Override
      public BuildStep teamPerson(Team teamPerson) {
         this.teamPerson = teamPerson;
         return this;
@@ -259,8 +283,8 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, Team teamPerson) {
-      super(id, title, body, endDate, state, teamPerson);
+    private CopyOfBuilder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, Team teamPerson) {
+      super(id, title, body, endDate, state, image, teamPerson);
       Objects.requireNonNull(title);
     }
     
@@ -285,10 +309,16 @@ public final class Task implements Model {
     }
     
     @Override
+     public CopyOfBuilder image(String image) {
+      return (CopyOfBuilder) super.image(image);
+    }
+    
+    @Override
      public CopyOfBuilder teamPerson(Team teamPerson) {
       return (CopyOfBuilder) super.teamPerson(teamPerson);
     }
   }
+  
 
   
 }

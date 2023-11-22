@@ -17,6 +17,9 @@
       },
       "auth": {
         "taskmasterf267218c": {}
+      },
+      "storage": {
+        "taskmaster": {}
       }
     }
   }

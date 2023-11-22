@@ -42,7 +42,6 @@ public class EditTaskActivity extends AppCompatActivity {
     TextView taskTeam;
     CompletableFuture<List<Team>> teamFuture = new CompletableFuture<>();
 
-
     Spinner teamSpinner;
     Spinner taskStateSpinner;
 
@@ -50,11 +49,11 @@ public class EditTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_task);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        setContentView(R.layout.activity_edit_task);
         Button startDateButton = findViewById(R.id.startDateButton_editTask);
         startDateButton.setOnClickListener(view1 -> {
             openDialog();
