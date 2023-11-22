@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.amplifyframework.core.Amplify;
@@ -19,6 +20,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ImageView back = findViewById(R.id.backbutton_login);
+        back.setOnClickListener(view ->  {
+            Intent gobackFormIntent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(gobackFormIntent);
+        });
 
         Intent callingIntent= getIntent();
         String email = callingIntent.getStringExtra(VerifyAccountActivity.VERIFY_ACCOUNT_EMAIL_TAG);

@@ -58,29 +58,7 @@ public class MainActivity extends AppCompatActivity {
 //        taskDatabase= DatabaseSingleton.getInstance(getApplicationContext());
 //        tasks=taskDatabase.taskDAO().findAll();
 
-                /*for toolbar*/
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-
-        Button addTaskButton = (Button) findViewById(R.id.addTaskButton);
-        addTaskButton.setOnClickListener(view -> {
-            Intent goToNewTaskFormIntent = new Intent(MainActivity.this, AddNewTaskActivity.class);
-            startActivity(goToNewTaskFormIntent);
-        });
-
-        ImageButton userProfile = (ImageButton) findViewById(R.id.userProfile);
-        userProfile.setOnClickListener(view -> {
-            Intent goToUserSettings = new Intent(MainActivity.this, UserSettingsActivity.class);
-            startActivity(goToUserSettings);
-        });
-
-        Button allTasksButton = (Button) findViewById(R.id.allTasksButton);
-        allTasksButton.setOnClickListener(v -> {
-            Intent goToAllTasksFormIntent = new Intent(MainActivity.this, AllTasksActivity.class);
-            startActivity(goToAllTasksFormIntent);
-        });
+ init();
 //createTeam();
 setupRecyclerView();
 setUpLoginAndLogoutButton();
@@ -90,108 +68,9 @@ setUpLoginAndLogoutButton();
     protected void onResume() {
         super.onResume();
 
-        // auth part
-        AuthUser authUser = Amplify.Auth.getCurrentUser();
-        String username="";
-        if (authUser == null){
-            Button loginButton = (Button) findViewById(R.id.productListLoginButton);
-            loginButton.setVisibility(View.VISIBLE);
-            Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
-            logoutButton.setVisibility(View.INVISIBLE);
-        }else{
-            username = authUser.getUsername();
-            Log.i(TAG, "Username is: "+ username);
-            Button loginButton = (Button) findViewById(R.id.productListLoginButton);
-            loginButton.setVisibility(View.INVISIBLE);
-            Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
-            logoutButton.setVisibility(View.VISIBLE);
-            // show user email in the main activity
-            String username2 = username; // ugly way for lambda hack
-            Amplify.Auth.fetchUserAttributes(
-                    success ->
-                    {
-                        Log.i(TAG, "Fetch user attributes succeeded for username: "+username2);
-                        for (AuthUserAttribute userAttribute: success){
-                            if(userAttribute.getKey().getKeyString().equals("email")){
-                                String userEmail = userAttribute.getValue();
-                                runOnUiThread(() ->
-                                {
-                                    ((TextView)findViewById(R.id.userNicknameTextView)).setText(userEmail);
-                                });
-                            }
-                        }
-                    },
-                    failure ->
-                    {
-                        Log.i(TAG, "Fetch user attributes failed: "+failure.toString());
-                    }
-            );
-        }
+        auth();
 
-        ////////////////
-        TextView userTasks;
-        userTasks = findViewById(R.id.usertasks);
-        //SharedPreferences sp = getApplicationContext().getSharedPreferences("MyUserPrefs", Context.MODE_PRIVATE);
-        String name = sp.getString(UserSettingsActivity.USERNAME_TAG, "no name");
-        userTasks.setText(name.isEmpty() ? "tasks" : name + "'s tasks");
-
-
-
-        // filter tasks based on user settings
-        TextView userTeam;
-        userTeam = findViewById(R.id.team_home);
-        String teamName = sp.getString("filterTeam", "no name");
-        userTeam.setText(teamName.isEmpty() ? "team" : teamName);
-
-        String taskFilter = sp.getString("filterState","");
-        if(!taskFilter.isEmpty()){
-            Log.i("MainActivity", "inside not empty filter");
-
-//            tasks.clear();
-//            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
-//            adapter.notifyDataSetChanged();
-            Amplify.API.query(
-                    ModelQuery.list(Task.class),
-                    success ->
-                    {
-                        Log.i("MainActivity", "Read Tasks successfully"+taskFilter);
-                        tasks.clear();
-                        for (Task databaseTask : success.getData()){
-                            if(databaseTask.getState().toString().equals(taskFilter.toUpperCase()) && databaseTask.getTeamPerson().getName().equals(teamName) ) {
-                                Log.i("MainActivity", "team associated:"+databaseTask.getTeamPerson().getName()+"team filter:"+teamName);
-
-                            tasks.add(databaseTask);}
-                        }
-                        runOnUiThread(() ->{
-                            adapter.notifyDataSetChanged();
-                        });
-                    },
-                    failure -> Log.i("MainActivity", "Did not read Tasks successfully")
-            );
-        }
-        else{
-            // retrieving list of tasks from room database
-//            tasks.clear();
-//            tasks.addAll(taskDatabase.taskDAO().findAll());
-//            adapter.notifyDataSetChanged();
-            Log.i("MainActivity", "inside  empty filter");
-
-            Amplify.API.query(
-                    ModelQuery.list(Task.class),
-                    success ->
-                    {
-                        Log.i("MainActivity", "Read Tasks successfully");
-                        tasks.clear();
-                        for (Task databaseTask : success.getData()){
-                            tasks.add(databaseTask);
-                        }
-                        runOnUiThread(() ->{
-                            adapter.notifyDataSetChanged();
-                        });
-                    },
-                    failure -> Log.i("MainActivity", "Did not read Tasks successfully")
-            );
-        }
+        filterTasks();
     }
 
     private void setupRecyclerView(){
@@ -285,5 +164,136 @@ setUpLoginAndLogoutButton();
                     }
             );
         });
+    }
+
+    private void init() {
+        /*for toolbar*/
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Button addTaskButton = (Button) findViewById(R.id.addTaskButton);
+        addTaskButton.setOnClickListener(view -> {
+            Intent goToNewTaskFormIntent = new Intent(MainActivity.this, AddNewTaskActivity.class);
+            startActivity(goToNewTaskFormIntent);
+        });
+
+        ImageButton userProfile = (ImageButton) findViewById(R.id.userProfile);
+        userProfile.setOnClickListener(view -> {
+            Intent goToUserSettings = new Intent(MainActivity.this, UserSettingsActivity.class);
+            startActivity(goToUserSettings);
+        });
+
+        Button allTasksButton = (Button) findViewById(R.id.allTasksButton);
+        allTasksButton.setOnClickListener(v -> {
+            Intent goToAllTasksFormIntent = new Intent(MainActivity.this, AllTasksActivity.class);
+            startActivity(goToAllTasksFormIntent);
+        });
+    }
+    private void auth(){
+
+        // auth part
+        AuthUser authUser = Amplify.Auth.getCurrentUser();
+        String username="";
+        if (authUser == null){
+            Button loginButton = (Button) findViewById(R.id.productListLoginButton);
+            loginButton.setVisibility(View.VISIBLE);
+            Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
+            logoutButton.setVisibility(View.INVISIBLE);
+        }else{
+            username = authUser.getUsername();
+            Log.i(TAG, "Username is: "+ username);
+            Button loginButton = (Button) findViewById(R.id.productListLoginButton);
+            loginButton.setVisibility(View.INVISIBLE);
+            Button logoutButton = (Button) findViewById(R.id.productListLogoutButton);
+            logoutButton.setVisibility(View.VISIBLE);
+            // show user email in the main activity
+            String username2 = username; // ugly way for lambda hack
+            Amplify.Auth.fetchUserAttributes(
+                    success ->
+                    {
+                        Log.i(TAG, "Fetch user attributes succeeded for username: "+username2);
+                        for (AuthUserAttribute userAttribute: success){
+                            if(userAttribute.getKey().getKeyString().equals("email")){
+                                String userEmail = userAttribute.getValue();
+                                runOnUiThread(() ->
+                                {
+                                    ((TextView)findViewById(R.id.userNicknameTextView)).setText(userEmail);
+                                });
+                            }
+                        }
+                    },
+                    failure ->
+                    {
+                        Log.i(TAG, "Fetch user attributes failed: "+failure.toString());
+                    }
+            );
+        }
+
+        ////////////////
+        TextView userTasks;
+        userTasks = findViewById(R.id.usertasks);
+        //SharedPreferences sp = getApplicationContext().getSharedPreferences("MyUserPrefs", Context.MODE_PRIVATE);
+        String name = sp.getString(UserSettingsActivity.USERNAME_TAG, "no name");
+        userTasks.setText(name.isEmpty() ? "tasks" : name + "'s tasks");
+    }
+
+    private void filterTasks(){
+        // filter tasks based on user settings
+        TextView userTeam;
+        userTeam = findViewById(R.id.team_home);
+        String teamName = sp.getString("filterTeam", "no name");
+        userTeam.setText(teamName.isEmpty() ? "team" : teamName);
+
+        String taskFilter = sp.getString("filterState","");
+        if(!taskFilter.isEmpty()){
+            Log.i("MainActivity", "inside not empty filter");
+
+//            tasks.clear();
+//            tasks.addAll(taskDatabase.taskDAO().findTaskByState(TaskState.fromString(taskFilter)));
+//            adapter.notifyDataSetChanged();
+            Amplify.API.query(
+                    ModelQuery.list(Task.class),
+                    success ->
+                    {
+                        Log.i("MainActivity", "Read Tasks successfully"+taskFilter);
+                        tasks.clear();
+                        for (Task databaseTask : success.getData()){
+                            if(databaseTask.getState().toString().equals(taskFilter.toUpperCase()) && databaseTask.getTeamPerson().getName().equals(teamName) ) {
+                                Log.i("MainActivity", "team associated:"+databaseTask.getTeamPerson().getName()+"team filter:"+teamName);
+
+                                tasks.add(databaseTask);}
+                        }
+                        runOnUiThread(() ->{
+                            adapter.notifyDataSetChanged();
+                        });
+                    },
+                    failure -> Log.i("MainActivity", "Did not read Tasks successfully")
+            );
+        }
+        else{
+            // retrieving list of tasks from room database
+//            tasks.clear();
+//            tasks.addAll(taskDatabase.taskDAO().findAll());
+//            adapter.notifyDataSetChanged();
+            Log.i("MainActivity", "inside  empty filter");
+
+            Amplify.API.query(
+                    ModelQuery.list(Task.class),
+                    success ->
+                    {
+                        Log.i("MainActivity", "Read Tasks successfully");
+                        tasks.clear();
+                        for (Task databaseTask : success.getData()){
+                            tasks.add(databaseTask);
+                        }
+                        runOnUiThread(() ->{
+                            adapter.notifyDataSetChanged();
+                        });
+                    },
+                    failure -> Log.i("MainActivity", "Did not read Tasks successfully")
+            );
+        }
     }
 }
