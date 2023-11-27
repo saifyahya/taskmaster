@@ -105,7 +105,36 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         setupAddImageButton();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+       //Intent Filter
+        Intent callingIntent = getIntent();
+        if(callingIntent != null && callingIntent.getType() != null && callingIntent.getType().startsWith("image") ){
+            Uri incomingImageFileUri= callingIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+            if (incomingImageFileUri != null){
+                InputStream incomingImageFileInputStream = null;
+                Log.d(TAG, "incoming iamge uri"+incomingImageFileUri.toString());
+
+                try {
+                    incomingImageFileInputStream = getContentResolver().openInputStream(incomingImageFileUri);
+
+                    ImageView productImageView = findViewById(R.id.taskImage);
+
+                    if (productImageView != null) {
+                        Log.d(TAG, "image input stream"+incomingImageFileInputStream.toString());
+                        productImageView.setImageBitmap(BitmapFactory.decodeStream(incomingImageFileInputStream));
+                    }else {
+                        Log.e(TAG, "ImageView is null for some reasons");
+                    }
+                }catch (FileNotFoundException fnfe){
+                    Log.e(TAG," Could not get file stream from the URI "+fnfe.getMessage(),fnfe);
+                }
+            }
+        }
+    }
 //    private void setUpSaveButton()
 //    {
 //        Button saveButton = (Button)findViewById(R.id.editProductSaveButton);
