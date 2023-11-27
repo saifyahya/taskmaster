@@ -71,3 +71,6 @@ Include *Cognito* authentication, so the user can signup with email and password
 1. In the Add Task activity: allow th user to pick an image, the picked image will be uploaded to S3 and attached with the task.
 2. Update the Task model to include a image of type string.
 3. In Task Details Activity: the image associated with task is rendered.
+
+- Lab38:
+1. Use Intent filter to allow the user to share images from another apps to Task Master and show the image in the Add Task Activity.
