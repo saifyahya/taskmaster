@@ -6,14 +6,30 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.CancellationToken;
+import com.google.android.gms.tasks.OnTokenCanceledListener;
+
+import androidx.annotation.NonNull;
+
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -41,6 +57,7 @@ import com.demo.myfirstapplication.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -48,11 +65,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class AddNewTaskActivity extends AppCompatActivity {
-//    TaskDatabase taskDatabase;
+    //    TaskDatabase taskDatabase;
     Date selectedDate;
     Spinner taskStateSpinner;
     Spinner teamSpinner;
@@ -62,6 +80,10 @@ public class AddNewTaskActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> activityResultLauncher;
     private String s3ImageKey = "";
 
+    FusedLocationProviderClient locationProviderClient = null;
+
+    Geocoder geocoder = null;
+    static final int LOCATION_POLLING_INTERVAL = 5 * 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +93,9 @@ public class AddNewTaskActivity extends AppCompatActivity {
 //        taskDatabase = DatabaseSingleton.getInstance(getApplicationContext());
 
 
-
         activityResultLauncher = getImagePickingActivityResultLauncher();  // You MUST set this up in onCreate() in the lifecycle
 
-
+        requestPermissionLocation(); //for location
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -105,37 +126,46 @@ public class AddNewTaskActivity extends AppCompatActivity {
 
         setupAddImageButton();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
 
-       //Intent Filter
+        //Intent Filter
         Intent callingIntent = getIntent();
-        if(callingIntent != null && callingIntent.getType() != null && callingIntent.getType().startsWith("image") ){
-            Uri incomingImageFileUri= callingIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+        Log.i(TAG, "on resume, the calling intent= " + callingIntent.toString());
 
-            if (incomingImageFileUri != null){
+        if (callingIntent != null && callingIntent.getType() != null && callingIntent.getType().startsWith("image")) {
+            Uri incomingImageFileUri = callingIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+            Log.i(TAG, "Received intent type: " + callingIntent.getType());
+            Bundle extras = callingIntent.getExtras();
+            if (extras != null) {
+                for (String key : extras.keySet()) {
+                    Log.i(TAG, "Extra key: " + key + ", value: " + extras.get(key));
+                }
+            }
+            if (incomingImageFileUri != null) {
                 InputStream incomingImageFileInputStream = null;
-                Log.d(TAG, "incoming iamge uri"+incomingImageFileUri.toString());
-
+                Log.i(TAG, "iamge");
                 try {
                     incomingImageFileInputStream = getContentResolver().openInputStream(incomingImageFileUri);
-
+                    Log.i(TAG, "iamge");
                     ImageView productImageView = findViewById(R.id.taskImage);
 
                     if (productImageView != null) {
-                        Log.d(TAG, "image input stream"+incomingImageFileInputStream.toString());
+                        Log.i(TAG, "iamge");
                         productImageView.setImageBitmap(BitmapFactory.decodeStream(incomingImageFileInputStream));
-                    }else {
+                    } else {
                         Log.e(TAG, "ImageView is null for some reasons");
                     }
-                }catch (FileNotFoundException fnfe){
-                    Log.e(TAG," Could not get file stream from the URI "+fnfe.getMessage(),fnfe);
+                } catch (FileNotFoundException fnfe) {
+                    Log.e(TAG, " Could not get file stream from the URI " + fnfe.getMessage(), fnfe);
                 }
             }
         }
     }
-//    private void setUpSaveButton()
+
+    //    private void setUpSaveButton()
 //    {
 //        Button saveButton = (Button)findViewById(R.id.editProductSaveButton);
 //        saveButton.setOnClickListener(v ->
@@ -143,39 +173,30 @@ public class AddNewTaskActivity extends AppCompatActivity {
 //            saveProduct(s3ImageKey);
 //        });
 //    }
-    private ActivityResultLauncher<Intent> getImagePickingActivityResultLauncher()
-    {
+    private ActivityResultLauncher<Intent> getImagePickingActivityResultLauncher() {
         // Part 2: Create an image picking activity result launcher
         ActivityResultLauncher<Intent> imagePickingActivityResultLauncher =
                 registerForActivityResult(
                         new ActivityResultContracts.StartActivityForResult(),
-                        new ActivityResultCallback<ActivityResult>()
-                        {
+                        new ActivityResultCallback<ActivityResult>() {
                             @Override
-                            public void onActivityResult(ActivityResult result)
-                            {
-                                if (result.getResultCode() == Activity.RESULT_OK)
-                                {
-                                    if (result.getData() != null)
-                                    {
+                            public void onActivityResult(ActivityResult result) {
+                                if (result.getResultCode() == Activity.RESULT_OK) {
+                                    if (result.getData() != null) {
                                         Uri pickedImageFileUri = result.getData().getData();
-                                        try
-                                        {
+                                        try {
                                             InputStream pickedImageInputStream = getContentResolver().openInputStream(pickedImageFileUri);
                                             String pickedImageFilename = getFileNameFromUri(pickedImageFileUri);
                                             Log.i(TAG, "Succeeded in getting input stream from file on phone! Filename is: " + pickedImageFilename);
                                             // Part 3: Use our InputStream to upload file to S3
                                             //switchFromAddButtonToDeleteButton(addImageButton);
-                                            uploadInputStreamToS3(pickedImageInputStream, pickedImageFilename,pickedImageFileUri);
+                                            uploadInputStreamToS3(pickedImageInputStream, pickedImageFilename, pickedImageFileUri);
 
-                                        } catch (FileNotFoundException fnfe)
-                                        {
+                                        } catch (FileNotFoundException fnfe) {
                                             Log.e(TAG, "Could not get file from file picker! " + fnfe.getMessage(), fnfe);
                                         }
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     Log.e(TAG, "Activity result error in ActivityResultLauncher.onActivityResult");
                                 }
                             }
@@ -185,8 +206,7 @@ public class AddNewTaskActivity extends AppCompatActivity {
         return imagePickingActivityResultLauncher;
     }
 
-    private void uploadInputStreamToS3(InputStream pickedImageInputStream, String pickedImageFilename,Uri pickedImageFileUri)
-    {
+    private void uploadInputStreamToS3(InputStream pickedImageInputStream, String pickedImageFilename, Uri pickedImageFileUri) {
         Amplify.Storage.uploadInputStream(
                 pickedImageFilename,  // S3 key
                 pickedImageInputStream,
@@ -194,17 +214,14 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 {
                     Log.i(TAG, "Succeeded in getting file uploaded to S3! Key is: " + success.getKey());
                     // Part 4: Update/save our Product object to have an image key
-                   // saveTaskToDatabase(success.getKey());
-                    s3ImageKey=success.getKey();
+                    // saveTaskToDatabase(success.getKey());
+                    s3ImageKey = success.getKey();
                     //updateImageButtons();
                     ImageView productImageView = findViewById(R.id.taskImage);
                     InputStream pickedImageInputStreamCopy = null;  // need to make a copy because InputStreams cannot be reused!
-                    try
-                    {
+                    try {
                         pickedImageInputStreamCopy = getContentResolver().openInputStream(pickedImageFileUri);
-                    }
-                    catch (FileNotFoundException fnfe)
-                    {
+                    } catch (FileNotFoundException fnfe) {
                         Log.e(TAG, "Could not get file stream from URI! " + fnfe.getMessage(), fnfe);
                     }
                     productImageView.setImageBitmap(BitmapFactory.decodeStream(pickedImageInputStreamCopy));
@@ -215,14 +232,15 @@ public class AddNewTaskActivity extends AppCompatActivity {
                 }
         );
     }
-    private void setupAddImageButton(){
+
+    private void setupAddImageButton() {
         Button pickImage = findViewById(R.id.pickImageButton);
         pickImage.setOnClickListener(view -> {
             launchImageSelectionIntent();
         });
     }
-    private void launchImageSelectionIntent()
-    {
+
+    private void launchImageSelectionIntent() {
         // Part 1: Launch activity to pick file
 
         Intent imageFilePickingIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -258,31 +276,90 @@ public class AddNewTaskActivity extends AppCompatActivity {
         EditText taskDescriptionEditText = (EditText) findViewById(R.id.taskDescriptionText);
         String title = taskTitleEditText.getText().toString();
         String body = taskDescriptionEditText.getText().toString();
-        TaskStateEnum selectedTaskState =(TaskStateEnum) taskStateSpinner.getSelectedItem();
+        TaskStateEnum selectedTaskState = (TaskStateEnum) taskStateSpinner.getSelectedItem();
         if (selectedDate == null) {
             selectedDate = Calendar.getInstance().getTime();  //setting default end day today
         }
         String currentDateString = com.amazonaws.util.DateUtils.formatISO8601Date(selectedDate);
         String selectedTeamString = teamSpinner.getSelectedItem().toString();
 
-        List<Team> teams=null;
+        List<Team> teams = null;
         try {
-            teams=teamFuture.get();
-        }catch (InterruptedException ie){
+            teams = teamFuture.get();
+        } catch (InterruptedException ie) {
             Log.e(TAG, " InterruptedException while getting teams");
-        }catch (ExecutionException ee){
-            Log.e(TAG," ExecutionException while getting teams");
+        } catch (ExecutionException ee) {
+            Log.e(TAG, " ExecutionException while getting teams");
         }
 
         Team selectedTeam = teams.stream().filter(c -> c.getName().equals(selectedTeamString)).findAny().orElseThrow(RuntimeException::new);
 //        Task newTask = new Task(title, body, selectedTaskState, selectedDate);
-        Task newTask = Task.builder()
+
+        // add location to task automatically
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationProviderClient.getLastLocation().addOnSuccessListener(location ->
+                        {
+                            if (location == null) {
+                                Log.e(TAG, "Location CallBack was null");
+                            }
+                            String currentLatitude = Double.toString(location.getLatitude());
+                            String currentLongitude = Double.toString(location.getLongitude());
+                            Log.i(TAG, "Our userLatitude: " + location.getLatitude());
+                            Log.i(TAG, "Our userLongitude: " + location.getLongitude());
+                           // saveProduct(name, description, currentLatitude, currentLongitude, selectedContact);
+saveTaskWithLocation(title,body,selectedTaskState,selectedTeam,currentLongitude,currentLatitude);
+                        }
+
+                ).addOnCanceledListener(() ->
+                {
+                    Log.e(TAG, "Location request was Canceled");
+                })
+                .addOnFailureListener(failure ->
+                {
+                    Log.e(TAG, "Location request failed, Error was: " + failure.getMessage(), failure.getCause());
+                })
+                .addOnCompleteListener(complete ->
+                {
+                    Log.e(TAG, "Location request Completed");
+                });
+
+
+
+//        Task newTask = Task.builder()
+//                .title(title)
+//                .body(body)
+//                .endDate( new Temporal.DateTime(selectedDate,0 ))
+//                .image(s3ImageKey)
+//                .state(selectedTaskState)
+//                .teamPerson(selectedTeam)
+//                .build();
+////        taskDatabase.taskDAO().insertTask(newTask);
+//        Amplify.API.mutate(
+//                ModelMutation.create(newTask),
+//                successResponse -> Log.i(TAG, "AddTaskActivity.onCreate(): Task added successfully"),//success response
+//                failureResponse -> Log.e(TAG, "AddTaskActivity.onCreate(): failed with this response" + failureResponse)// in case we have a failed response
+//        );
+//        Snackbar.make(findViewById(R.id.addNewTaskActicity), "Task Saved", Snackbar.LENGTH_SHORT).show();
+    }
+    private void saveTaskWithLocation(String title, String body, TaskStateEnum stateEnum, Team team,String longitude, String latitude ){
+                Task newTask = Task.builder()
                 .title(title)
                 .body(body)
                 .endDate( new Temporal.DateTime(selectedDate,0 ))
                 .image(s3ImageKey)
-                .state(selectedTaskState)
-                .teamPerson(selectedTeam)
+                .state(stateEnum)
+                .teamPerson(team)
+                        .locationLatitude(latitude)
+                        .locationLongitude(longitude)
                 .build();
 //        taskDatabase.taskDAO().insertTask(newTask);
         Amplify.API.mutate(
@@ -352,5 +429,74 @@ public class AddNewTaskActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+
+    private void requestPermissionLocation(){
+        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        locationProviderClient.flushLocations();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationProviderClient.getLastLocation().addOnSuccessListener(location ->
+        {
+            if (location == null) {
+                Log.e(TAG, "Location CallBack was null");
+            }
+            String currentLatitude = Double.toString(location.getLatitude());
+            String currentLongitude = Double.toString(location.getLongitude());
+            Log.i(TAG, "Our userLatitude: " + location.getLatitude());
+            Log.i(TAG, "Our userLongitude: " + location.getLongitude());
+        });
+
+        locationProviderClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
+            @NonNull
+            @Override
+            public CancellationToken onCanceledRequested(@NonNull OnTokenCanceledListener onTokenCanceledListener) {
+                return null;
+            }
+
+            @Override
+            public boolean isCancellationRequested() {
+                return false;
+            }
+        });
+
+        geocoder=new Geocoder(getApplicationContext(), Locale.getDefault());
+        LocationRequest locationRequest= LocationRequest.create();
+        locationRequest.setInterval(LOCATION_POLLING_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationCallback locationCallback = new LocationCallback()
+        {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                try {
+                    String address = geocoder.getFromLocation(
+                                    locationResult.getLastLocation().getLatitude(),
+                                    locationResult.getLastLocation().getLongitude(),
+                                    1)
+                            .get(0)
+                            .getAddressLine(0);
+                    Log.i(TAG,"Repeating current location is: "+address);
+
+
+                }catch (IOException ioe){
+                    Log.e(TAG, "Could not get subscribed location: "+ioe.getMessage(), ioe);
+                }
+            }
+        };
+
+        locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
     }
 }

@@ -74,3 +74,7 @@ Include *Cognito* authentication, so the user can signup with email and password
 
 - Lab38:
 1. Use Intent filter to allow the user to share images from another apps to Task Master and show the image in the Add Task Activity.
+
+- Lab39:
+1. Use location `getLastLocation()` and `getCurrentLocation()` to add the location of the new task. The location is determined inside the AddNewTaskActivity and saved with the task (Longitude and Latitude).
+2. Use *geocoder* to determine the address of the task using its longitude and latitude and display the address in the TaskDetailsActivity. 

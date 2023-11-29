@@ -53,6 +53,8 @@ mutation CreateTask(
     endDate
     state
     image
+    locationLongitude
+    locationLatitude
     teamId
     teamPerson {
       id
@@ -78,6 +80,8 @@ mutation UpdateTask(
     endDate
     state
     image
+    locationLongitude
+    locationLatitude
     teamId
     teamPerson {
       id
@@ -103,6 +107,8 @@ mutation DeleteTask(
     endDate
     state
     image
+    locationLongitude
+    locationLatitude
     teamId
     teamPerson {
       id

@@ -34,6 +34,8 @@ public final class Task implements Model {
   public static final QueryField END_DATE = field("Task", "endDate");
   public static final QueryField STATE = field("Task", "state");
   public static final QueryField IMAGE = field("Task", "image");
+  public static final QueryField LOCATION_LONGITUDE = field("Task", "locationLongitude");
+  public static final QueryField LOCATION_LATITUDE = field("Task", "locationLatitude");
   public static final QueryField TEAM_PERSON = field("Task", "teamId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String", isRequired = true) String title;
@@ -41,6 +43,8 @@ public final class Task implements Model {
   private final @ModelField(targetType="AWSDateTime") Temporal.DateTime endDate;
   private final @ModelField(targetType="TaskStateEnum") TaskStateEnum state;
   private final @ModelField(targetType="String") String image;
+  private final @ModelField(targetType="String") String locationLongitude;
+  private final @ModelField(targetType="String") String locationLatitude;
   private final @ModelField(targetType="Team") @BelongsTo(targetName = "teamId", type = Team.class) Team teamPerson;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
@@ -74,6 +78,14 @@ public final class Task implements Model {
       return image;
   }
   
+  public String getLocationLongitude() {
+      return locationLongitude;
+  }
+  
+  public String getLocationLatitude() {
+      return locationLatitude;
+  }
+  
   public Team getTeamPerson() {
       return teamPerson;
   }
@@ -86,13 +98,15 @@ public final class Task implements Model {
       return updatedAt;
   }
   
-  private Task(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, Team teamPerson) {
+  private Task(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, String locationLongitude, String locationLatitude, Team teamPerson) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.endDate = endDate;
     this.state = state;
     this.image = image;
+    this.locationLongitude = locationLongitude;
+    this.locationLatitude = locationLatitude;
     this.teamPerson = teamPerson;
   }
   
@@ -110,6 +124,8 @@ public final class Task implements Model {
               ObjectsCompat.equals(getEndDate(), task.getEndDate()) &&
               ObjectsCompat.equals(getState(), task.getState()) &&
               ObjectsCompat.equals(getImage(), task.getImage()) &&
+              ObjectsCompat.equals(getLocationLongitude(), task.getLocationLongitude()) &&
+              ObjectsCompat.equals(getLocationLatitude(), task.getLocationLatitude()) &&
               ObjectsCompat.equals(getTeamPerson(), task.getTeamPerson()) &&
               ObjectsCompat.equals(getCreatedAt(), task.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), task.getUpdatedAt());
@@ -125,6 +141,8 @@ public final class Task implements Model {
       .append(getEndDate())
       .append(getState())
       .append(getImage())
+      .append(getLocationLongitude())
+      .append(getLocationLatitude())
       .append(getTeamPerson())
       .append(getCreatedAt())
       .append(getUpdatedAt())
@@ -142,6 +160,8 @@ public final class Task implements Model {
       .append("endDate=" + String.valueOf(getEndDate()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
       .append("image=" + String.valueOf(getImage()) + ", ")
+      .append("locationLongitude=" + String.valueOf(getLocationLongitude()) + ", ")
+      .append("locationLatitude=" + String.valueOf(getLocationLatitude()) + ", ")
       .append("teamPerson=" + String.valueOf(getTeamPerson()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
@@ -169,6 +189,8 @@ public final class Task implements Model {
       null,
       null,
       null,
+      null,
+      null,
       null
     );
   }
@@ -180,6 +202,8 @@ public final class Task implements Model {
       endDate,
       state,
       image,
+      locationLongitude,
+      locationLatitude,
       teamPerson);
   }
   public interface TitleStep {
@@ -194,6 +218,8 @@ public final class Task implements Model {
     BuildStep endDate(Temporal.DateTime endDate);
     BuildStep state(TaskStateEnum state);
     BuildStep image(String image);
+    BuildStep locationLongitude(String locationLongitude);
+    BuildStep locationLatitude(String locationLatitude);
     BuildStep teamPerson(Team teamPerson);
   }
   
@@ -205,18 +231,22 @@ public final class Task implements Model {
     private Temporal.DateTime endDate;
     private TaskStateEnum state;
     private String image;
+    private String locationLongitude;
+    private String locationLatitude;
     private Team teamPerson;
     public Builder() {
       
     }
     
-    private Builder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, Team teamPerson) {
+    private Builder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, String locationLongitude, String locationLatitude, Team teamPerson) {
       this.id = id;
       this.title = title;
       this.body = body;
       this.endDate = endDate;
       this.state = state;
       this.image = image;
+      this.locationLongitude = locationLongitude;
+      this.locationLatitude = locationLatitude;
       this.teamPerson = teamPerson;
     }
     
@@ -231,6 +261,8 @@ public final class Task implements Model {
           endDate,
           state,
           image,
+          locationLongitude,
+          locationLatitude,
           teamPerson);
     }
     
@@ -266,6 +298,18 @@ public final class Task implements Model {
     }
     
     @Override
+     public BuildStep locationLongitude(String locationLongitude) {
+        this.locationLongitude = locationLongitude;
+        return this;
+    }
+    
+    @Override
+     public BuildStep locationLatitude(String locationLatitude) {
+        this.locationLatitude = locationLatitude;
+        return this;
+    }
+    
+    @Override
      public BuildStep teamPerson(Team teamPerson) {
         this.teamPerson = teamPerson;
         return this;
@@ -283,8 +327,8 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, Team teamPerson) {
-      super(id, title, body, endDate, state, image, teamPerson);
+    private CopyOfBuilder(String id, String title, String body, Temporal.DateTime endDate, TaskStateEnum state, String image, String locationLongitude, String locationLatitude, Team teamPerson) {
+      super(id, title, body, endDate, state, image, locationLongitude, locationLatitude, teamPerson);
       Objects.requireNonNull(title);
     }
     
@@ -314,11 +358,22 @@ public final class Task implements Model {
     }
     
     @Override
+     public CopyOfBuilder locationLongitude(String locationLongitude) {
+      return (CopyOfBuilder) super.locationLongitude(locationLongitude);
+    }
+    
+    @Override
+     public CopyOfBuilder locationLatitude(String locationLatitude) {
+      return (CopyOfBuilder) super.locationLatitude(locationLatitude);
+    }
+    
+    @Override
      public CopyOfBuilder teamPerson(Team teamPerson) {
       return (CopyOfBuilder) super.teamPerson(teamPerson);
     }
   }
   
+
 
   
 }
