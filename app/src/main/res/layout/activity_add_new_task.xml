@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +7,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.AddNewTaskActivity">
+
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/textView"-->
+    <!--        android:layout_width="727dp"-->
+    <!--        android:layout_height="62dp"-->
+    <!--        android:autoText="false"-->
+    <!--        android:background="#1f6f78"-->
+    <!--        android:fontFamily="casual"-->
+    <!--        android:text="@string/task_master"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+    <!--        android:textSize="48sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        tools:ignore="Deprecated,MissingConstraints,TextViewEdits" />-->
 
 
     <include
@@ -145,20 +161,17 @@
         app:layout_constraintVertical_bias="0.0" />
 
 
-
-        <ImageView
-            android:id="@+id/taskImage"
-            android:layout_width="114dp"
-            android:layout_height="116dp"
-            android:layout_marginTop="36dp"
-            app:layout_constraintBottom_toTopOf="@+id/spinner2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.751"
-            app:layout_constraintStart_toEndOf="@+id/pickImageButton"
-            app:layout_constraintTop_toBottomOf="@+id/taskDescriptionText"
-            app:layout_constraintVertical_bias="0.337"
-            tools:srcCompat="@tools:sample/avatars" />
-
+    <ImageView
+        android:id="@+id/taskImage"
+        android:layout_width="193dp"
+        android:layout_height="183dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintBottom_toTopOf="@+id/spinner2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.754"
+        app:layout_constraintStart_toEndOf="@+id/pickImageButton"
+        app:layout_constraintTop_toBottomOf="@+id/taskDescriptionText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>

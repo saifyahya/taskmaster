@@ -20,6 +20,8 @@ type Task @model @auth(rules: [{allow: public}]){
   endDate: AWSDateTime
   state: TaskStateEnum
     image: String
+    locationLongitude: String
+    locationLatitude: String
     teamId: ID! @index(name: "byTeam", sortKeyFields: ["title"])
     teamPerson: Team @belongsTo(fields: ["teamId"])
 }

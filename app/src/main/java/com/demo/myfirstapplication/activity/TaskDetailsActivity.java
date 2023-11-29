@@ -3,9 +3,13 @@ package com.demo.myfirstapplication.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +30,9 @@ import com.demo.myfirstapplication.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class TaskDetailsActivity extends AppCompatActivity {
     Task retrievedTask;
@@ -34,7 +41,10 @@ public class TaskDetailsActivity extends AppCompatActivity {
     TextView taskTeam;
     TextView taskEndDate;
     TextView taskState;
+    TextView taskLocation;
     private String s3ImageKey = "";
+    String cityName="";
+    String countryName="";
 
     public static final String TAG ="retrievedTASK";
     @Override
@@ -66,6 +76,9 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
             taskEndDate = findViewById(R.id.taskDateView);
             settingTaskInfo(taskEndDate,retrievedTask.getEndDate().format().split("T")[0]);
+
+            taskLocation = findViewById(R.id.taskLocation);
+            taskLocation.setText(cityName+" \n"+ countryName);
         });
 
     }
@@ -106,6 +119,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
                         response -> {
                             retrievedTask = response.getData(); // the result (retrieved task) is asynronous, it will not block the code exection ad then return retrieved task through a callback
                             if (retrievedTask != null) {
+                                getAddressFromLocation(TaskDetailsActivity.this,Double.valueOf( retrievedTask.getLocationLatitude()),Double.valueOf( retrievedTask.getLocationLongitude()));
                                 updateUIWithTaskDetails(retrievedTask);
                                 renderTaskImage();
                             } else {
@@ -203,5 +217,28 @@ public class TaskDetailsActivity extends AppCompatActivity {
             );
         }
     }
+        private void getAddressFromLocation(Context context, double latitude, double longitude) {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+            try {
+                List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+                if (addresses != null && addresses.size() > 0) {
+                    Address address = addresses.get(0);
+
+                    // You can get various address details like city, country, etc.
+                     cityName = address.getLocality();
+                    countryName = address.getCountryName();
+
+//                    return cityName + ", " + countryName;
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+//            return null;
+        }
+
 
 }
