@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.amplifyframework.api.graphql.model.ModelMutation;
 import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.auth.AuthUser;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 //        tasks=taskDatabase.taskDAO().findAll();
 
  init();
+        analytics();  // record opening the app
 //createTeam();
 setupRecyclerView();
 setUpLoginAndLogoutButton();
@@ -295,5 +297,14 @@ setUpLoginAndLogoutButton();
                     failure -> Log.i("MainActivity", "Did not read Tasks successfully")
             );
         }
+    }
+    private void analytics(){  // recording an event which is opening the app
+        AnalyticsEvent event = AnalyticsEvent.builder()
+                .name("openedApp")
+                .addProperty("time", Long.toString(new Date().getTime()))
+                .addProperty("trackingEvent", " main activity opened")
+                .build();
+
+        Amplify.Analytics.recordEvent(event);
     }
 }

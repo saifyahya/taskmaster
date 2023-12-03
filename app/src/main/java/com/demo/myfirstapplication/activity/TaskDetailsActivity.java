@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,7 +31,11 @@ import com.demo.myfirstapplication.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,6 +51,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
     String cityName="";
     String countryName="";
 
+    MediaPlayer mp = new MediaPlayer();
+
     public static final String TAG ="retrievedTASK";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
         init();
         displayTask();
+        setUpSpeakButton();
         editTask();
         deleteTask();
 
@@ -240,5 +248,35 @@ public class TaskDetailsActivity extends AppCompatActivity {
 //            return null;
         }
 
+    private void setUpSpeakButton(){
+        Button speakButton = (Button) findViewById(R.id.speechButton);
+        speakButton.setOnClickListener(b ->
+        {
+            String productName= ((TextView) findViewById(R.id.taskDetailsDescription)).getText().toString();
 
+            Amplify.Predictions.convertTextToSpeech(
+                    productName,
+                    result -> playAudio(result.getAudioData()),
+                    error -> Log.e(TAG,"conversion failed ", error)
+            );
+        });
+    }
+    // Taken from https://stackoverflow.com/a/25005243/16889809
+    private void playAudio(InputStream data) {
+        File mp3File = new File(getCacheDir(), "audio.mp3");
+
+        try (OutputStream out = new FileOutputStream(mp3File)) {
+            byte[] buffer = new byte[8 * 1_024];
+            int bytesRead;
+            while ((bytesRead = data.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            mp.reset();
+            mp.setOnPreparedListener(MediaPlayer::start);
+            mp.setDataSource(new FileInputStream(mp3File).getFD());
+            mp.prepareAsync();
+        } catch (IOException error) {
+            Log.e("MyAmplifyApp", "Error writing audio file", error);
+        }
+    }
 }
