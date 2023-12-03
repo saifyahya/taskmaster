@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 
+import com.amplifyframework.analytics.AnalyticsEvent;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -368,6 +369,7 @@ saveTaskWithLocation(title,body,selectedTaskState,selectedTeam,currentLongitude,
                 failureResponse -> Log.e(TAG, "AddTaskActivity.onCreate(): failed with this response" + failureResponse)// in case we have a failed response
         );
         Snackbar.make(findViewById(R.id.addNewTaskActicity), "Task Saved", Snackbar.LENGTH_SHORT).show();
+        analytics(title,team); // record adding new task
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -498,5 +500,15 @@ saveTaskWithLocation(title,body,selectedTaskState,selectedTeam,currentLongitude,
         };
 
         locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, getMainLooper());
+    }
+    private void analytics(String taskTitle, Team team){  // recording an event which is adding a new task
+        AnalyticsEvent event = AnalyticsEvent.builder()
+                .name("addingNewTask")
+                .addProperty("time", Long.toString(new Date().getTime()))
+                .addProperty("taskTitle", taskTitle)
+                .addProperty("taskTeam", team.getName())
+                .build();
+
+        Amplify.Analytics.recordEvent(event);
     }
 }
