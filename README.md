@@ -78,3 +78,7 @@ Include *Cognito* authentication, so the user can signup with email and password
 - Lab39:
 1. Use location `getLastLocation()` and `getCurrentLocation()` to add the location of the new task. The location is determined inside the AddNewTaskActivity and saved with the task (Longitude and Latitude).
 2. Use *geocoder* to determine the address of the task using its longitude and latitude and display the address in the TaskDetailsActivity. 
+
+- Lab 41:
+1. On the Main activity adding analytics to record opening the app, and add analytics tn the Add New Task Activity to record adding new task.
+2. On the Task Details activity, add a button to read out the task’s description using the Amplify Predictions library.
