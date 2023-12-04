@@ -127,7 +127,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
                         response -> {
                             retrievedTask = response.getData(); // the result (retrieved task) is asynronous, it will not block the code exection ad then return retrieved task through a callback
                             if (retrievedTask != null) {
-                                getAddressFromLocation(TaskDetailsActivity.this,Double.valueOf( retrievedTask.getLocationLatitude()),Double.valueOf( retrievedTask.getLocationLongitude()));
+                                if (retrievedTask.getLocationLatitude() != null && retrievedTask.getLocationLongitude() != null) {
+                                getAddressFromLocation(TaskDetailsActivity.this,Double.valueOf( retrievedTask.getLocationLatitude()),Double.valueOf( retrievedTask.getLocationLongitude()));}
                                 updateUIWithTaskDetails(retrievedTask);
                                 renderTaskImage();
                             } else {
